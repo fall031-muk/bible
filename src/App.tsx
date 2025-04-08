@@ -1,5 +1,5 @@
 import React, { useState, createContext, useCallback } from 'react';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme, PaletteMode } from '@mui/material';
 import { BibleSearch } from './components/BibleSearch';
 
 // 글자 크기 컨텍스트 생성
@@ -10,8 +10,15 @@ export const FontSizeContext = createContext({
   resetFontSize: () => {},
 });
 
+// 다크 모드 컨텍스트 생성
+export const ColorModeContext = createContext({
+  mode: 'light' as PaletteMode,
+  toggleColorMode: () => {},
+});
+
 function App() {
   const [fontSize, setFontSize] = useState(16); // 기본 글자 크기 16px
+  const [mode, setMode] = useState<PaletteMode>('light'); // 기본 라이트 모드
 
   // 글자 크기 증가 함수
   const increaseFontSize = useCallback(() => {
@@ -28,15 +35,28 @@ function App() {
     setFontSize(16);
   }, []);
 
-  // 글자 크기에 따라 동적으로 테마 생성
+  // 색상 모드 토글 함수
+  const toggleColorMode = useCallback(() => {
+    setMode(prevMode => prevMode === 'light' ? 'dark' : 'light');
+  }, []);
+
+  // 글자 크기와 색상 모드에 따라 동적으로 테마 생성
   const theme = createTheme({
     palette: {
-      mode: 'light',
+      mode,
       primary: {
-        main: '#1976d2',
+        main: mode === 'light' ? '#1976d2' : '#90caf9',
       },
       secondary: {
-        main: '#dc004e',
+        main: mode === 'light' ? '#dc004e' : '#f48fb1',
+      },
+      background: {
+        default: mode === 'light' ? '#fff' : '#121212',
+        paper: mode === 'light' ? '#fff' : '#1e1e1e',
+      },
+      text: {
+        primary: mode === 'light' ? 'rgba(0, 0, 0, 0.87)' : 'rgba(255, 255, 255, 0.87)',
+        secondary: mode === 'light' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
       },
     },
     typography: {
@@ -45,19 +65,26 @@ function App() {
   });
 
   return (
-    <FontSizeContext.Provider 
-      value={{ 
-        fontSize, 
-        increaseFontSize, 
-        decreaseFontSize, 
-        resetFontSize 
+    <ColorModeContext.Provider
+      value={{
+        mode,
+        toggleColorMode
       }}
     >
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BibleSearch />
-      </ThemeProvider>
-    </FontSizeContext.Provider>
+      <FontSizeContext.Provider 
+        value={{ 
+          fontSize, 
+          increaseFontSize, 
+          decreaseFontSize, 
+          resetFontSize 
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BibleSearch />
+        </ThemeProvider>
+      </FontSizeContext.Provider>
+    </ColorModeContext.Provider>
   );
 }
 

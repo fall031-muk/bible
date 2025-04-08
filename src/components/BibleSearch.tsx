@@ -19,15 +19,18 @@ import {
   useTheme,
   Drawer,
   Fab,
+  Divider,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import SearchIcon from '@mui/icons-material/Search';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import bibleData from '../data/bible.json';
 import { BibleData, BibleVerse, SearchParams } from '../types/bible';
-import { FontSizeContext } from '../App';
+import { FontSizeContext, ColorModeContext } from '../App';
 
 const bible = bibleData as BibleData;
 
@@ -38,6 +41,7 @@ export const BibleSearch: React.FC = () => {
   const [results, setResults] = useState<BibleVerse[]>([]);
   const [showFontControls, setShowFontControls] = useState(false);
   const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = useContext(FontSizeContext);
+  const { mode, toggleColorMode } = useContext(ColorModeContext);
   
   // 반응형 디자인을 위한 미디어 쿼리
   const theme = useTheme();
@@ -145,7 +149,21 @@ export const BibleSearch: React.FC = () => {
           position: isMobile ? 'absolute' : 'static', 
           top: isMobile ? 0 : 'auto', 
           right: isMobile ? 0 : 'auto',
+          display: 'flex',
+          alignItems: 'center',
         }}>
+          {/* 다크 모드 토글 버튼 */}
+          <Tooltip title={mode === 'light' ? "다크 모드로 전환" : "라이트 모드로 전환"}>
+            <IconButton 
+              onClick={toggleColorMode} 
+              color="inherit" 
+              size={isMobile ? "small" : "medium"}
+              sx={{ mr: 1 }}
+            >
+              {mode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
+            </IconButton>
+          </Tooltip>
+          
           <Tooltip title="글자 크기 조절">
             <IconButton onClick={toggleFontControls} color="primary" size={isMobile ? "small" : "medium"}>
               <ZoomInIcon />
