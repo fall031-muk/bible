@@ -87,6 +87,12 @@ export const BibleSearch: React.FC = () => {
     setResults(searchResults);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -99,6 +105,7 @@ export const BibleSearch: React.FC = () => {
             label="검색어"
             value={searchParams.keyword || ''}
             onChange={(e) => setSearchParams({ ...searchParams, keyword: e.target.value })}
+            onKeyDown={handleKeyDown}
             sx={{ minWidth: 200 }}
           />
           
