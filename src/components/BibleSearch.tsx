@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   Box,
   TextField,
@@ -20,6 +20,11 @@ import {
   Drawer,
   Fab,
   Divider,
+  Chip,
+  Popover,
+  ListItemButton,
+  ListItemIcon,
+  ClickAwayListener,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -28,9 +33,22 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import SearchIcon from '@mui/icons-material/Search';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import HistoryIcon from '@mui/icons-material/History';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
 import bibleData from '../data/bible.json';
 import { BibleData, BibleVerse, SearchParams } from '../types/bible';
 import { FontSizeContext, ColorModeContext } from '../App';
+
+// 로컬 스토리지 키
+const SEARCH_HISTORY_KEY = 'bible-search-history';
+
+// 검색 기록 타입 정의
+interface SearchHistory extends SearchParams {
+  id: string;
+  timestamp: number;
+  displayText: string;
+}
 
 const bible = bibleData as BibleData;
 
@@ -40,6 +58,9 @@ export const BibleSearch: React.FC = () => {
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [results, setResults] = useState<BibleVerse[]>([]);
   const [showFontControls, setShowFontControls] = useState(false);
+  const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
+  const [historyAnchorEl, setHistoryAnchorEl] = useState<HTMLButtonElement | null>(null);
+  
   const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = useContext(FontSizeContext);
   const { mode, toggleColorMode } = useContext(ColorModeContext);
   
@@ -47,6 +68,28 @@ export const BibleSearch: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  
+  // 검색 기록 로드
+  useEffect(() => {
+    try {
+      const storedHistory = localStorage.getItem(SEARCH_HISTORY_KEY);
+      if (storedHistory) {
+        setSearchHistory(JSON.parse(storedHistory));
+      }
+    } catch (error) {
+      console.error('검색 기록을 불러오는 중 오류가 발생했습니다:', error);
+    }
+  }, []);
+
+  // 검색 기록 저장
+  const saveSearchHistory = (history: SearchHistory[]) => {
+    try {
+      localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(history));
+      setSearchHistory(history);
+    } catch (error) {
+      console.error('검색 기록을 저장하는 중 오류가 발생했습니다:', error);
+    }
+  };
 
   useEffect(() => {
     // 성경 책 이름 목록을 추출합니다
@@ -75,6 +118,80 @@ export const BibleSearch: React.FC = () => {
       setChapters([]);
     }
   }, [searchParams.book]);
+
+  // 검색 기록에 추가
+  const addToSearchHistory = (params: SearchParams) => {
+    // 빈 검색은 기록하지 않음
+    if (!params.keyword && !params.book && !params.chapter) return;
+    
+    // 검색 기록 아이템 생성
+    const displayText = getDisplayText(params);
+    
+    // 동일한 검색 내용이 있는지 확인
+    const existingIndex = searchHistory.findIndex(
+      item => (
+        item.keyword === params.keyword &&
+        item.book === params.book &&
+        item.chapter === params.chapter
+      )
+    );
+    
+    const newHistoryItem: SearchHistory = {
+      ...params,
+      id: Date.now().toString(),
+      timestamp: Date.now(),
+      displayText,
+    };
+    
+    let updatedHistory: SearchHistory[];
+    
+    if (existingIndex !== -1) {
+      // 동일한 검색 내용이 있으면 제거하고 최신으로 추가
+      updatedHistory = [...searchHistory];
+      updatedHistory.splice(existingIndex, 1);
+      updatedHistory.unshift(newHistoryItem);
+    } else {
+      // 새로운 검색 내용 추가
+      updatedHistory = [newHistoryItem, ...searchHistory];
+    }
+    
+    // 최대 20개까지만 저장
+    if (updatedHistory.length > 20) {
+      updatedHistory = updatedHistory.slice(0, 20);
+    }
+    
+    saveSearchHistory(updatedHistory);
+  };
+  
+  // 검색 기록에서 항목 제거
+  const removeFromSearchHistory = (id: string) => {
+    const updatedHistory = searchHistory.filter(item => item.id !== id);
+    saveSearchHistory(updatedHistory);
+  };
+  
+  // 검색 기록 전체 삭제
+  const clearSearchHistory = () => {
+    saveSearchHistory([]);
+  };
+  
+  // 검색 표시 텍스트 생성
+  const getDisplayText = (params: SearchParams): string => {
+    const parts = [];
+    
+    if (params.keyword) {
+      parts.push(`"${params.keyword}"`);
+    }
+    
+    if (params.book) {
+      if (params.chapter) {
+        parts.push(`${params.book} ${params.chapter}장`);
+      } else {
+        parts.push(params.book);
+      }
+    }
+    
+    return parts.length > 0 ? parts.join(' - ') : '전체 검색';
+  };
 
   const handleSearch = () => {
     const { keyword, book, chapter } = searchParams;
@@ -109,6 +226,9 @@ export const BibleSearch: React.FC = () => {
     }
 
     setResults(searchResults);
+    
+    // 검색 기록에 추가
+    addToSearchHistory({ ...searchParams });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -120,6 +240,29 @@ export const BibleSearch: React.FC = () => {
   const toggleFontControls = () => {
     setShowFontControls(!showFontControls);
   };
+  
+  // 검색 기록 팝오버 열기
+  const handleHistoryClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setHistoryAnchorEl(event.currentTarget);
+  };
+  
+  // 검색 기록 팝오버 닫기
+  const handleHistoryClose = () => {
+    setHistoryAnchorEl(null);
+  };
+  
+  // 검색 기록 항목 선택
+  const handleHistoryItemClick = (historyItem: SearchHistory) => {
+    setSearchParams({
+      keyword: historyItem.keyword,
+      book: historyItem.book,
+      chapter: historyItem.chapter,
+    });
+    handleHistoryClose();
+    handleSearch();
+  };
+  
+  const historyOpen = Boolean(historyAnchorEl);
 
   return (
     <Box sx={{ 
@@ -152,6 +295,18 @@ export const BibleSearch: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
         }}>
+          {/* 검색 기록 버튼 */}
+          <Tooltip title="검색 기록">
+            <IconButton 
+              onClick={handleHistoryClick}
+              color="inherit" 
+              size={isMobile ? "small" : "medium"}
+              sx={{ mr: 1 }}
+            >
+              <HistoryIcon />
+            </IconButton>
+          </Tooltip>
+          
           {/* 다크 모드 토글 버튼 */}
           <Tooltip title={mode === 'light' ? "다크 모드로 전환" : "라이트 모드로 전환"}>
             <IconButton 
@@ -288,6 +443,40 @@ export const BibleSearch: React.FC = () => {
             검색
           </Button>
         </Box>
+        
+        {/* 최근 검색 기록 표시 */}
+        {searchHistory.length > 0 && (
+          <Box sx={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: 1, 
+            mt: 2,
+            alignItems: 'center'
+          }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+              최근 검색:
+            </Typography>
+            {searchHistory.slice(0, 5).map((item) => (
+              <Chip
+                key={item.id}
+                label={item.displayText}
+                size="small"
+                color="primary"
+                variant="outlined"
+                onClick={() => handleHistoryItemClick(item)}
+                sx={{ 
+                  maxWidth: isMobile ? '100%' : 200,
+                  fontSize: '0.75rem',
+                  '& .MuiChip-label': { 
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  } 
+                }}
+              />
+            ))}
+          </Box>
+        )}
       </Paper>
 
       <Paper>
@@ -367,6 +556,102 @@ export const BibleSearch: React.FC = () => {
           <SearchIcon />
         </Fab>
       )}
+      
+      {/* 검색 기록 팝오버 */}
+      <Popover
+        open={historyOpen}
+        anchorEl={historyAnchorEl}
+        onClose={handleHistoryClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Box
+          sx={{ 
+            width: isMobile ? 300 : 400, 
+            maxHeight: 400,
+            overflow: 'auto',
+            p: 1 
+          }}
+        >
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            p: 1,
+            mb: 1,
+            borderBottom: 1, 
+            borderColor: 'divider' 
+          }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              검색 기록
+            </Typography>
+            {searchHistory.length > 0 && (
+              <Tooltip title="전체 삭제">
+                <IconButton size="small" onClick={clearSearchHistory}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+          
+          {searchHistory.length > 0 ? (
+            <List dense>
+              {searchHistory.map((item) => (
+                <ListItem 
+                  key={item.id} 
+                  disablePadding
+                  secondaryAction={
+                    <IconButton 
+                      edge="end" 
+                      aria-label="삭제" 
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFromSearchHistory(item.id);
+                      }}
+                    >
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+                  }
+                >
+                  <ListItemButton 
+                    onClick={() => handleHistoryItemClick(item)}
+                    dense
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <HistoryIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary={item.displayText}
+                      primaryTypographyProps={{ 
+                        noWrap: true,
+                        sx: { maxWidth: isMobile ? 180 : 280 } 
+                      }}
+                      secondary={new Date(item.timestamp).toLocaleString()}
+                      secondaryTypographyProps={{
+                        variant: 'caption',
+                        fontSize: '0.7rem'
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Box sx={{ py: 2, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                검색 기록이 없습니다.
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Popover>
     </Box>
   );
 }; 
