@@ -27,6 +27,9 @@ import {
   ClickAwayListener,
   Menu,
   Badge,
+  Snackbar,
+  Alert,
+  Avatar,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -41,6 +44,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import bibleData from '../data/bible.json';
 import { BibleData, BibleVerse, SearchParams, BookmarkItem } from '../types/bible';
 import { FontSizeContext, ColorModeContext, BookmarkContext } from '../App';
@@ -77,6 +81,9 @@ export const BibleSearch: React.FC = () => {
   const [highlightMenuAnchorEl, setHighlightMenuAnchorEl] = useState<HTMLElement | null>(null);
   const [currentVerse, setCurrentVerse] = useState<BibleVerse | null>(null);
   const [bookmarkMenuAnchorEl, setBookmarkMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   
   const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = useContext(FontSizeContext);
   const { mode, toggleColorMode } = useContext(ColorModeContext);
@@ -387,6 +394,29 @@ export const BibleSearch: React.FC = () => {
     return Object.keys(bookmarks).length > 0;
   }, [bookmarks]);
 
+  // 구절 복사 함수
+  const copyVerseToClipboard = (verse: BibleVerse) => {
+    const textToCopy = `${verse.book} ${verse.chapter}:${verse.verse} "${verse.text}"`;
+    
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        setSnackbarMessage('구절이 클립보드에 복사되었습니다.');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+      })
+      .catch((error) => {
+        console.error('클립보드 복사 중 오류 발생:', error);
+        setSnackbarMessage('클립보드 복사에 실패했습니다.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      });
+  };
+
+  // 스낵바 닫기 함수
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <Box sx={{ 
       maxWidth: isMobile ? '100%' : '800px', 
@@ -680,6 +710,15 @@ export const BibleSearch: React.FC = () => {
                             <BookmarkIcon fontSize="small" /> : 
                             <BookmarkBorderIcon fontSize="small" />
                           }
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip title="구절 복사">
+                        <IconButton 
+                          size="small" 
+                          onClick={() => copyVerseToClipboard(verse)}
+                        >
+                          <ContentCopyIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                     </Box>
@@ -993,6 +1032,22 @@ export const BibleSearch: React.FC = () => {
           )}
         </Box>
       </Popover>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={handleSnackbarClose} 
+          severity={snackbarSeverity} 
+          sx={{ width: '100%' }}
+          variant="filled"
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }; 
