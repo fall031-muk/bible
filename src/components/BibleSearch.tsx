@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
 import {
   Box,
   TextField,
@@ -25,6 +25,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ClickAwayListener,
+  Menu,
+  Badge,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -36,12 +38,24 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import HistoryIcon from '@mui/icons-material/History';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteIcon from '@mui/icons-material/Delete';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 import bibleData from '../data/bible.json';
-import { BibleData, BibleVerse, SearchParams } from '../types/bible';
-import { FontSizeContext, ColorModeContext } from '../App';
+import { BibleData, BibleVerse, SearchParams, BookmarkItem } from '../types/bible';
+import { FontSizeContext, ColorModeContext, BookmarkContext } from '../App';
 
 // 로컬 스토리지 키
 const SEARCH_HISTORY_KEY = 'bible-search-history';
+
+// 하이라이트 색상 옵션
+const HIGHLIGHT_COLORS = {
+  yellow: '#ffeb3b',
+  green: '#4caf50',
+  blue: '#2196f3',
+  red: '#f44336',
+  purple: '#9c27b0',
+};
 
 // 검색 기록 타입 정의
 interface SearchHistory extends SearchParams {
@@ -60,9 +74,13 @@ export const BibleSearch: React.FC = () => {
   const [showFontControls, setShowFontControls] = useState(false);
   const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
   const [historyAnchorEl, setHistoryAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [highlightMenuAnchorEl, setHighlightMenuAnchorEl] = useState<HTMLElement | null>(null);
+  const [currentVerse, setCurrentVerse] = useState<BibleVerse | null>(null);
+  const [bookmarkMenuAnchorEl, setBookmarkMenuAnchorEl] = useState<HTMLElement | null>(null);
   
   const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = useContext(FontSizeContext);
   const { mode, toggleColorMode } = useContext(ColorModeContext);
+  const { bookmarks, addBookmark, removeBookmark, toggleHighlight, isBookmarked, getBookmarkByReference } = useContext(BookmarkContext);
   
   // 반응형 디자인을 위한 미디어 쿼리
   const theme = useTheme();
@@ -264,6 +282,111 @@ export const BibleSearch: React.FC = () => {
   
   const historyOpen = Boolean(historyAnchorEl);
 
+  // 하이라이트 메뉴 열기
+  const handleHighlightMenuOpen = (event: React.MouseEvent<HTMLElement>, verse: BibleVerse) => {
+    setHighlightMenuAnchorEl(event.currentTarget);
+    setCurrentVerse(verse);
+  };
+
+  // 하이라이트 메뉴 닫기
+  const handleHighlightMenuClose = () => {
+    setHighlightMenuAnchorEl(null);
+  };
+
+  // 하이라이트 적용
+  const applyHighlight = (color?: string) => {
+    if (currentVerse) {
+      const verseReference = `${currentVerse.book}${currentVerse.chapter}:${currentVerse.verse}`;
+      
+      const bookmarkItem: BookmarkItem = {
+        id: `bookmark-${Date.now()}`,
+        reference: verseReference,
+        book: currentVerse.book,
+        chapter: currentVerse.chapter,
+        verse: currentVerse.verse,
+        text: currentVerse.text,
+        timestamp: Date.now(),
+        highlightColor: color,
+      };
+      
+      toggleHighlight(bookmarkItem, color);
+      handleHighlightMenuClose();
+    }
+  };
+
+  // 북마크 토글
+  const toggleBookmark = (verse: BibleVerse) => {
+    const verseReference = `${verse.book}${verse.chapter}:${verse.verse}`;
+    const existingBookmark = getBookmarkByReference(verseReference);
+    
+    if (existingBookmark) {
+      removeBookmark(existingBookmark.id);
+    } else {
+      const bookmarkItem: BookmarkItem = {
+        id: `bookmark-${Date.now()}`,
+        reference: verseReference,
+        book: verse.book,
+        chapter: verse.chapter,
+        verse: verse.verse,
+        text: verse.text,
+        timestamp: Date.now(),
+      };
+      addBookmark(bookmarkItem);
+    }
+  };
+
+  // 구절의 북마크 상태 확인
+  const checkBookmarkStatus = (verse: BibleVerse) => {
+    const verseReference = `${verse.book}${verse.chapter}:${verse.verse}`;
+    return isBookmarked(verseReference);
+  };
+
+  // 구절의 하이라이트 색상 가져오기
+  const getVerseHighlightColor = (verse: BibleVerse) => {
+    const verseReference = `${verse.book}${verse.chapter}:${verse.verse}`;
+    const bookmark = getBookmarkByReference(verseReference);
+    return bookmark?.highlightColor;
+  };
+
+  // 북마크 메뉴 열기
+  const handleBookmarkMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setBookmarkMenuAnchorEl(event.currentTarget);
+  };
+
+  // 북마크 메뉴 닫기
+  const handleBookmarkMenuClose = () => {
+    setBookmarkMenuAnchorEl(null);
+  };
+
+  // 북마크한 구절로 이동
+  const navigateToBookmark = (bookmark: BookmarkItem) => {
+    // 검색 파라미터 설정
+    setSearchParams({
+      book: bookmark.book,
+      chapter: bookmark.chapter,
+    });
+    
+    handleBookmarkMenuClose();
+    
+    // 검색을 실행하지 않고 직접 해당 구절만 표시
+    const exactVerseResult: BibleVerse[] = [{
+      book: bookmark.book,
+      chapter: bookmark.chapter,
+      verse: bookmark.verse,
+      text: bookmark.text
+    }];
+    
+    setResults(exactVerseResult);
+    
+    // 상단으로 스크롤
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // 북마크 보유 여부 확인
+  const hasBookmarks = useMemo(() => {
+    return Object.keys(bookmarks).length > 0;
+  }, [bookmarks]);
+
   return (
     <Box sx={{ 
       maxWidth: isMobile ? '100%' : '800px', 
@@ -295,6 +418,20 @@ export const BibleSearch: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
         }}>
+          {/* 북마크 버튼 */}
+          <Tooltip title="북마크">
+            <IconButton 
+              onClick={handleBookmarkMenuOpen}
+              color="inherit" 
+              size={isMobile ? "small" : "medium"}
+              sx={{ mr: 1 }}
+            >
+              <Badge badgeContent={Object.keys(bookmarks).length} color="primary">
+                <BookmarkIcon />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+          
           {/* 검색 기록 버튼 */}
           <Tooltip title="검색 기록">
             <IconButton 
@@ -484,41 +621,86 @@ export const BibleSearch: React.FC = () => {
           p: isMobile ? 1 : 2 
         }}>
           {results.length > 0 ? (
-            results.map((verse, index) => (
-              <ListItem 
-                key={index} 
-                divider
-                sx={{
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  padding: isMobile ? '12px 0' : '20px 0',
-                }}
-              >
-                <Typography 
-                  component="div" 
-                  variant={isMobile ? "subtitle1" : "h6"}
-                  sx={{ 
-                    fontWeight: 'bold',
-                    mb: 2
+            results.map((verse, index) => {
+              const isBookmarked = checkBookmarkStatus(verse);
+              const highlightColor = getVerseHighlightColor(verse);
+              const verseReference = `${verse.book}${verse.chapter}:${verse.verse}`;
+              
+              return (
+                <ListItem 
+                  key={index} 
+                  divider
+                  data-verse-reference={`${verse.book} ${verse.chapter}장 ${verse.verse}절`}
+                  sx={{
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    padding: isMobile ? '12px 0' : '20px 0',
+                    backgroundColor: highlightColor ? `${highlightColor}20` : 'inherit', // 하이라이트 색상을 배경색으로 (투명도 추가)
+                    borderLeft: highlightColor ? `4px solid ${highlightColor}` : 'none', // 왼쪽 경계선
+                    pl: highlightColor ? 2 : 0, // 하이라이트된 경우 왼쪽 패딩 추가
                   }}
                 >
-                  {`${verse.book} ${verse.chapter}장 ${verse.verse}절`}
-                </Typography>
-                
-                <Typography 
-                  component="div" 
-                  variant="body1"
-                  sx={{ 
+                  <Box sx={{ 
+                    display: 'flex',
                     width: '100%',
-                    lineHeight: 1.8,
-                    wordBreak: 'keep-all',
-                    pl: 1
-                  }}
-                >
-                  {verse.text}
-                </Typography>
-              </ListItem>
-            ))
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1
+                  }}>
+                    <Typography 
+                      component="div" 
+                      variant={isMobile ? "subtitle1" : "h6"}
+                      sx={{ 
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {`${verse.book} ${verse.chapter}장 ${verse.verse}절`}
+                    </Typography>
+                    
+                    <Box>
+                      <Tooltip title="하이라이트">
+                        <IconButton 
+                          size="small" 
+                          onClick={(e) => handleHighlightMenuOpen(e, verse)}
+                          sx={{ 
+                            color: highlightColor || 'inherit' 
+                          }}
+                        >
+                          <ColorLensIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      
+                      <Tooltip title={isBookmarked ? "북마크 제거" : "북마크 추가"}>
+                        <IconButton 
+                          size="small" 
+                          onClick={() => toggleBookmark(verse)}
+                          color={isBookmarked ? "primary" : "default"}
+                        >
+                          {isBookmarked ? 
+                            <BookmarkIcon fontSize="small" /> : 
+                            <BookmarkBorderIcon fontSize="small" />
+                          }
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </Box>
+                  
+                  <Typography 
+                    component="div" 
+                    variant="body1"
+                    sx={{ 
+                      width: '100%',
+                      lineHeight: 1.8,
+                      wordBreak: 'keep-all',
+                      pl: 1,
+                      mt: 1
+                    }}
+                  >
+                    {verse.text}
+                  </Typography>
+                </ListItem>
+              );
+            })
           ) : (
             <ListItem>
               <ListItemText 
@@ -647,6 +829,165 @@ export const BibleSearch: React.FC = () => {
             <Box sx={{ py: 2, textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary">
                 검색 기록이 없습니다.
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Popover>
+      
+      {/* 하이라이트 색상 선택 메뉴 */}
+      <Menu
+        anchorEl={highlightMenuAnchorEl}
+        open={Boolean(highlightMenuAnchorEl)}
+        onClose={handleHighlightMenuClose}
+      >
+        <Box sx={{ 
+          p: 1, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: 1 
+        }}>
+          <Typography variant="subtitle2" sx={{ px: 1 }}>
+            하이라이트 색상
+          </Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 1, 
+            flexWrap: 'wrap', 
+            justifyContent: 'center',
+            p: 1
+          }}>
+            {Object.entries(HIGHLIGHT_COLORS).map(([name, color]) => (
+              <Tooltip key={name} title={name}>
+                <IconButton 
+                  size="small" 
+                  onClick={() => applyHighlight(color)}
+                  sx={{ 
+                    bgcolor: color,
+                    width: 24,
+                    height: 24,
+                    '&:hover': {
+                      bgcolor: color,
+                      opacity: 0.8
+                    }
+                  }}
+                >
+                  <span></span>
+                </IconButton>
+              </Tooltip>
+            ))}
+            <Tooltip title="하이라이트 제거">
+              <IconButton 
+                size="small" 
+                onClick={() => applyHighlight(undefined)}
+                sx={{ 
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  width: 24,
+                  height: 24
+                }}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+      </Menu>
+      
+      {/* 북마크 목록 팝오버 */}
+      <Popover
+        open={Boolean(bookmarkMenuAnchorEl)}
+        anchorEl={bookmarkMenuAnchorEl}
+        onClose={handleBookmarkMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Box
+          sx={{ 
+            width: isMobile ? 300 : 400, 
+            maxHeight: 400,
+            overflow: 'auto',
+            p: 1 
+          }}
+        >
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            p: 1,
+            mb: 1,
+            borderBottom: 1, 
+            borderColor: 'divider' 
+          }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              북마크
+            </Typography>
+          </Box>
+          
+          {hasBookmarks ? (
+            <List dense>
+              {Object.values(bookmarks)
+                .sort((a, b) => b.timestamp - a.timestamp) // 최신순 정렬
+                .map((bookmark) => (
+                  <ListItem 
+                    key={bookmark.id} 
+                    disablePadding
+                    secondaryAction={
+                      <IconButton 
+                        edge="end" 
+                        aria-label="삭제" 
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeBookmark(bookmark.id);
+                        }}
+                      >
+                        <ClearIcon fontSize="small" />
+                      </IconButton>
+                    }
+                    sx={{
+                      borderLeft: bookmark.highlightColor ? `4px solid ${bookmark.highlightColor}` : 'none',
+                      pl: bookmark.highlightColor ? 1 : 0,
+                    }}
+                  >
+                    <ListItemButton 
+                      onClick={() => navigateToBookmark(bookmark)}
+                      dense
+                    >
+                      <ListItemIcon sx={{ minWidth: 36 }}>
+                        <BookmarkIcon 
+                          fontSize="small" 
+                          sx={{ color: bookmark.highlightColor || 'primary.main' }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText 
+                        primary={`${bookmark.book} ${bookmark.chapter}:${bookmark.verse}`}
+                        primaryTypographyProps={{ 
+                          fontWeight: 'medium',
+                          noWrap: true,
+                          sx: { maxWidth: isMobile ? 180 : 280 } 
+                        }}
+                        secondary={bookmark.text.substring(0, 30) + (bookmark.text.length > 30 ? '...' : '')}
+                        secondaryTypographyProps={{
+                          variant: 'body2',
+                          noWrap: true
+                        }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+            </List>
+          ) : (
+            <Box sx={{ py: 2, textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary">
+                저장된 북마크가 없습니다.
               </Typography>
             </Box>
           )}
