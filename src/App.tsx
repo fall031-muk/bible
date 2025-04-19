@@ -1,6 +1,9 @@
 import React, { useState, createContext, useCallback, useEffect } from 'react';
-import { CssBaseline, ThemeProvider, createTheme, PaletteMode } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme, PaletteMode, Tabs, Tab, Box } from '@mui/material';
 import { BibleSearch } from './components/BibleSearch';
+import { BibleQuiz } from './components/BibleQuiz';
+import SearchIcon from '@mui/icons-material/Search';
+import QuizIcon from '@mui/icons-material/Quiz';
 import { BookmarkItem, BookmarksCollection } from './types/bible';
 
 // 로컬 스토리지 키
@@ -43,10 +46,52 @@ export const BookmarkContext = createContext<BookmarkContextType>({
   getBookmarkByReference: () => undefined,
 });
 
+// 탭 인터페이스 컴포넌트
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`bible-tabpanel-${index}`}
+      aria-labelledby={`bible-tab-${index}`}
+      style={{ width: '100%', height: '100%' }}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ width: '100%', height: '100%' }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+// 접근성을 위한 속성 생성 함수
+function a11yProps(index: number) {
+  return {
+    id: `bible-tab-${index}`,
+    'aria-controls': `bible-tabpanel-${index}`,
+  };
+}
+
 function App() {
   const [fontSize, setFontSize] = useState(16); // 기본 글자 크기 16px
   const [mode, setMode] = useState<PaletteMode>('light'); // 기본 라이트 모드
   const [bookmarks, setBookmarks] = useState<BookmarksCollection>({});
+  const [tabValue, setTabValue] = useState(0); // 현재 선택된 탭
+
+  // 탭 변경 핸들러
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
 
   // 북마크 불러오기
   useEffect(() => {
@@ -208,7 +253,34 @@ function App() {
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <BibleSearch />
+            <Box sx={{ width: '100%' }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs 
+                  value={tabValue} 
+                  onChange={handleTabChange} 
+                  aria-label="성경 탭"
+                  variant="fullWidth"
+                  centered
+                >
+                  <Tab 
+                    icon={<SearchIcon />} 
+                    label="성경 검색" 
+                    {...a11yProps(0)} 
+                  />
+                  <Tab 
+                    icon={<QuizIcon />} 
+                    label="성경 퀴즈" 
+                    {...a11yProps(1)} 
+                  />
+                </Tabs>
+              </Box>
+              <TabPanel value={tabValue} index={0}>
+                <BibleSearch />
+              </TabPanel>
+              <TabPanel value={tabValue} index={1}>
+                <BibleQuiz />
+              </TabPanel>
+            </Box>
           </ThemeProvider>
         </BookmarkContext.Provider>
       </FontSizeContext.Provider>

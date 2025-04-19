@@ -1,0 +1,86 @@
+[
+  {
+    "id": "q1",
+    "type": "multiple-choice",
+    "question": "노아의 방주에 타지 않은 동물은?",
+    "options": ["사자", "물고기", "코끼리", "원숭이"],
+    "answer": "물고기",
+    "explanation": "물고기는 물 속에서 살기 때문에 노아의 방주에 타지 않았습니다.",
+    "reference": "창세기 6-9장"
+  },
+  {
+    "id": "q2",
+    "type": "fill-blank",
+    "question": "예수님은 [빈칸]에서 태어나셨다.",
+    "answer": "베들레헴",
+    "explanation": "예수님은 다윗의 동네인 베들레헴에서 태어나셨습니다.",
+    "reference": "누가복음 2:4-7"
+  },
+  {
+    "id": "q3",
+    "type": "multiple-choice",
+    "question": "다윗이 물매로 쓰러뜨린 블레셋 장수는?",
+    "options": ["골리앗", "사울", "아브넬", "요압"],
+    "answer": "골리앗",
+    "explanation": "다윗은 물매와 돌로 블레셋 장수 골리앗을 쓰러뜨렸습니다.",
+    "reference": "사무엘상 17장"
+  },
+  {
+    "id": "q4",
+    "type": "fill-blank",
+    "question": "예수님의 첫 번째 기적은 [빈칸]에서 물을 포도주로 바꾸신 것이다.",
+    "answer": "가나",
+    "explanation": "예수님의 첫 번째 기적은 갈릴리 가나의 혼인 잔치에서 물을 포도주로 바꾸신 것입니다.",
+    "reference": "요한복음 2:1-11"
+  },
+  {
+    "id": "q5",
+    "type": "true-false",
+    "question": "모세는 가나안 땅에 들어갔다.",
+    "answer": false,
+    "explanation": "모세는 느보 산에서 가나안 땅을 바라본 후 죽었으며, 가나안 땅에 들어가지 못했습니다.",
+    "reference": "신명기 34:1-5"
+  },
+  {
+    "id": "q6",
+    "type": "multiple-choice",
+    "question": "성경에서 가장 먼저 나오는 책은?",
+    "options": ["창세기", "출애굽기", "요한복음", "시편"],
+    "answer": "창세기",
+    "explanation": "성경의 첫 번째 책은 창세기입니다.",
+    "reference": "성경의 구성"
+  },
+  {
+    "id": "q7",
+    "type": "fill-blank",
+    "question": "예수님의 제자 중 배반한 사람은 [빈칸]이다.",
+    "answer": "가룟 유다",
+    "explanation": "예수님을 은 30냥에 팔아넘긴 제자는 가룟 유다입니다.",
+    "reference": "마태복음 26:14-16"
+  },
+  {
+    "id": "q8",
+    "type": "true-false",
+    "question": "사도 바울은 원래 이름이 사울이었다.",
+    "answer": true,
+    "explanation": "사도 바울은 회심하기 전에는 사울이라는 이름을 가지고 있었습니다.",
+    "reference": "사도행전 13:9"
+  },
+  {
+    "id": "q9",
+    "type": "multiple-choice",
+    "question": "예수님께서 부활하신 후 처음으로 나타나신 사람은?",
+    "options": ["마리아 막달라", "베드로", "요한", "도마"],
+    "answer": "마리아 막달라",
+    "explanation": "예수님은 부활 후 처음으로 마리아 막달라에게 나타나셨습니다.",
+    "reference": "요한복음 20:11-18"
+  },
+  {
+    "id": "q10",
+    "type": "fill-blank",
+    "question": "모세의 형은 [빈칸]이다.",
+    "answer": "아론",
+    "explanation": "모세의 형은 아론으로, 그는 이스라엘의 첫 번째 대제사장이 되었습니다.",
+    "reference": "출애굽기 4:14"
+  }
+] 
