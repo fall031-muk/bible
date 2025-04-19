@@ -26,16 +26,23 @@ import {
   DialogContentText,
   DialogActions,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Tab,
+  Tabs,
+  Menu,
+  MenuItem,
+  Tooltip
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { QuizItem, QuizAnswer, QuizResultStats } from '../types/quiz';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { QuizItem, QuizAnswer, QuizResultStats, QuizDifficulty } from '../types/quiz';
 import quizData from '../data/bibleQuiz.json';
 import { FontSizeContext } from '../App';
+import { ScriptureModal } from './ScriptureModal';
 
 export const BibleQuiz: React.FC = () => {
   const { fontSize } = useContext(FontSizeContext);
@@ -43,6 +50,7 @@ export const BibleQuiz: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // 퀴즈 데이터
+  const [allQuizzes, setAllQuizzes] = useState<QuizItem[]>([]);
   const [quizzes, setQuizzes] = useState<QuizItem[]>([]);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<QuizAnswer[]>([]);
@@ -55,12 +63,65 @@ export const BibleQuiz: React.FC = () => {
   });
   const [showExplanation, setShowExplanation] = useState(false);
   const [textAnswer, setTextAnswer] = useState('');
+  
+  // 난이도 관련 상태
+  const [selectedDifficulty, setSelectedDifficulty] = useState<QuizDifficulty>('easy');
+  const [quizStarted, setQuizStarted] = useState(false);
+  
+  // 성경 구절 모달 관련 상태
+  const [scriptureModalOpen, setScriptureModalOpen] = useState(false);
+  const [currentReference, setCurrentReference] = useState('');
 
-  // 퀴즈 데이터 로드
+  // 모든 퀴즈 데이터 로드
   useEffect(() => {
-    setQuizzes(quizData as QuizItem[]);
-    initializeUserAnswers(quizData as QuizItem[]);
+    setAllQuizzes(quizData as QuizItem[]);
   }, []);
+
+  // 난이도별 퀴즈 필터링
+  useEffect(() => {
+    if (allQuizzes.length > 0) {
+      const filteredQuizzes = allQuizzes.filter(quiz => quiz.difficulty === selectedDifficulty);
+      setQuizzes(filteredQuizzes);
+      
+      if (quizStarted) {
+        initializeUserAnswers(filteredQuizzes);
+        setCurrentQuizIndex(0);
+        setShowResults(false);
+        setShowExplanation(false);
+        setTextAnswer('');
+      }
+    }
+  }, [allQuizzes, selectedDifficulty, quizStarted]);
+
+  // 난이도 변경 핸들러
+  const handleDifficultyChange = (_event: React.SyntheticEvent, newDifficulty: QuizDifficulty) => {
+    if (newDifficulty !== null) {
+      setSelectedDifficulty(newDifficulty);
+      if (quizStarted) {
+        // 이미 퀴즈를 진행 중이었다면 다시 시작
+        restartQuizWithNewDifficulty();
+      }
+    }
+  };
+
+  // 퀴즈 시작
+  const startQuiz = () => {
+    const filteredQuizzes = allQuizzes.filter(quiz => quiz.difficulty === selectedDifficulty);
+    setQuizzes(filteredQuizzes);
+    initializeUserAnswers(filteredQuizzes);
+    setQuizStarted(true);
+  };
+
+  // 난이도 변경 후 퀴즈 재시작
+  const restartQuizWithNewDifficulty = () => {
+    const filteredQuizzes = allQuizzes.filter(quiz => quiz.difficulty === selectedDifficulty);
+    setQuizzes(filteredQuizzes);
+    initializeUserAnswers(filteredQuizzes);
+    setCurrentQuizIndex(0);
+    setShowResults(false);
+    setShowExplanation(false);
+    setTextAnswer('');
+  };
 
   // 사용자 응답 초기화
   const initializeUserAnswers = (quizItems: QuizItem[]) => {
@@ -77,6 +138,17 @@ export const BibleQuiz: React.FC = () => {
       incorrectAnswers: 0,
       skippedAnswers: quizItems.length
     });
+  };
+
+  // 성경 구절 모달 열기
+  const handleOpenScriptureModal = (reference: string) => {
+    setCurrentReference(reference);
+    setScriptureModalOpen(true);
+  };
+
+  // 성경 구절 모달 닫기
+  const handleCloseScriptureModal = () => {
+    setScriptureModalOpen(false);
   };
 
   // 현재 퀴즈
@@ -227,13 +299,87 @@ export const BibleQuiz: React.FC = () => {
     return '더 많은 성경 공부가 필요합니다. 화이팅!';
   };
 
+  // 난이도 표시 텍스트
+  const getDifficultyLabel = (difficulty: QuizDifficulty): string => {
+    switch (difficulty) {
+      case 'easy': return '쉬움';
+      case 'medium': return '보통';
+      case 'hard': return '어려움';
+      default: return '쉬움';
+    }
+  };
+
+  if (!quizStarted) {
+    return (
+      <Box sx={{ p: 2, maxWidth: '100%' }}>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+          <Typography variant="h4" gutterBottom sx={{ fontSize: fontSize + 8, textAlign: 'center', mb: 3 }}>
+            성경 퀴즈
+          </Typography>
+          
+          <Typography variant="h6" gutterBottom sx={{ fontSize: fontSize + 2, textAlign: 'center' }}>
+            난이도 선택
+          </Typography>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+            <ToggleButtonGroup
+              value={selectedDifficulty}
+              exclusive
+              onChange={handleDifficultyChange}
+              aria-label="퀴즈 난이도"
+              sx={{ mb: 2 }}
+            >
+              <ToggleButton value="easy" sx={{ px: 3, py: 1 }}>
+                쉬움
+              </ToggleButton>
+              <ToggleButton value="medium" sx={{ px: 3, py: 1 }}>
+                보통
+              </ToggleButton>
+              <ToggleButton value="hard" sx={{ px: 3, py: 1 }}>
+                어려움
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          
+          <Alert severity="info" sx={{ mb: 3 }}>
+            <Typography sx={{ fontSize: fontSize }}>
+              {selectedDifficulty === 'easy' && '기본적인 성경 지식을 테스트합니다. 성경을 처음 접하는 분들에게 적합합니다.'}
+              {selectedDifficulty === 'medium' && '중간 수준의 성경 지식을 테스트합니다. 성경을 꾸준히 읽은 분들에게 적합합니다.'}
+              {selectedDifficulty === 'hard' && '깊이 있는 성경 지식을 테스트합니다. 성경에 대해 많이 알고 있는 분들을 위한 도전적인 문제들입니다.'}
+            </Typography>
+          </Alert>
+          
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={startQuiz}
+              sx={{ px: 4, py: 1, fontSize: fontSize + 2 }}
+            >
+              퀴즈 시작하기
+            </Button>
+          </Box>
+        </Paper>
+      </Box>
+    );
+  }
+
   if (showResults) {
     return (
       <Box sx={{ p: 2, maxWidth: '100%' }}>
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-          <Typography variant="h4" gutterBottom sx={{ fontSize: fontSize + 8 }}>
-            퀴즈 결과
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h4" gutterBottom sx={{ fontSize: fontSize + 8, mb: 0 }}>
+              퀴즈 결과
+            </Typography>
+            <Chip 
+              label={getDifficultyLabel(selectedDifficulty)} 
+              color={
+                selectedDifficulty === 'easy' ? 'success' : 
+                selectedDifficulty === 'medium' ? 'info' : 'error'
+              }
+            />
+          </Box>
           
           <Box sx={{ mb: 3 }}>
             <LinearProgress 
@@ -278,15 +424,29 @@ export const BibleQuiz: React.FC = () => {
             </Grid>
           </Grid>
 
-          <Button
-            variant="contained"
-            fullWidth
-            startIcon={<RestartAltIcon />}
-            onClick={handleRestartQuiz}
-            sx={{ mt: 2 }}
-          >
-            다시 도전하기
-          </Button>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => setQuizStarted(false)}
+                sx={{ mt: 2 }}
+              >
+                난이도 선택으로
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<RestartAltIcon />}
+                onClick={handleRestartQuiz}
+                sx={{ mt: 2 }}
+              >
+                다시 도전하기
+              </Button>
+            </Grid>
+          </Grid>
         </Paper>
       </Box>
     );
@@ -303,15 +463,25 @@ export const BibleQuiz: React.FC = () => {
   return (
     <Box sx={{ p: isMobile ? 1 : 2, maxWidth: '100%' }}>
       <Paper elevation={3} sx={{ p: isMobile ? 2 : 3, borderRadius: 2 }}>
-        {/* 진행 상황 표시 */}
+        {/* 상단 정보 표시 */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="body2" sx={{ fontSize: fontSize - 1 }}>
-            퀴즈 {currentQuizIndex + 1} / {quizzes.length}
-          </Typography>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="body2" sx={{ fontSize: fontSize - 1 }}>
+              {currentQuizIndex + 1} / {quizzes.length}
+            </Typography>
+            <Chip 
+              label={getDifficultyLabel(selectedDifficulty)} 
+              color={
+                selectedDifficulty === 'easy' ? 'success' : 
+                selectedDifficulty === 'medium' ? 'info' : 'error'
+              }
+              size="small"
+            />
+          </Stack>
           <LinearProgress 
             variant="determinate" 
             value={(currentQuizIndex / (quizzes.length - 1)) * 100} 
-            sx={{ width: '70%', height: 8, borderRadius: 5 }}
+            sx={{ width: '60%', height: 8, borderRadius: 5 }}
           />
         </Box>
 
@@ -331,6 +501,9 @@ export const BibleQuiz: React.FC = () => {
                 label={currentQuiz.reference}
                 variant="outlined"
                 size="small"
+                onClick={() => handleOpenScriptureModal(currentQuiz.reference)}
+                clickable
+                icon={<MenuBookIcon fontSize="small" />}
               />
             </Stack>
             
@@ -451,6 +624,16 @@ export const BibleQuiz: React.FC = () => {
                 <Typography sx={{ fontSize: fontSize - 1, mt: 1 }}>
                   {currentQuiz.explanation}
                 </Typography>
+                <Box sx={{ mt: 1 }}>
+                  <Button
+                    size="small"
+                    startIcon={<MenuBookIcon />}
+                    onClick={() => handleOpenScriptureModal(currentQuiz.reference)}
+                    sx={{ fontSize: fontSize - 2 }}
+                  >
+                    성경 구절 보기
+                  </Button>
+                </Box>
               </Alert>
             </Box>
           )}
@@ -499,7 +682,15 @@ export const BibleQuiz: React.FC = () => {
           </CardActions>
         </Card>
         
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button
+            variant="text"
+            onClick={() => setQuizStarted(false)}
+            size="small"
+          >
+            난이도 선택으로
+          </Button>
+          
           <Button
             variant="text"
             startIcon={<RestartAltIcon />}
@@ -510,6 +701,13 @@ export const BibleQuiz: React.FC = () => {
           </Button>
         </Box>
       </Paper>
+
+      {/* 성경 구절 모달 */}
+      <ScriptureModal
+        open={scriptureModalOpen}
+        onClose={handleCloseScriptureModal}
+        reference={currentReference}
+      />
     </Box>
   );
 }; 

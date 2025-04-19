@@ -6,7 +6,8 @@
     "options": ["사자", "물고기", "코끼리", "원숭이"],
     "answer": "물고기",
     "explanation": "물고기는 물 속에서 살기 때문에 노아의 방주에 타지 않았습니다.",
-    "reference": "창세기 6-9장"
+    "reference": "창세기 6-9장",
+    "difficulty": "easy"
   },
   {
     "id": "q2",
@@ -14,7 +15,8 @@
     "question": "예수님은 [빈칸]에서 태어나셨다.",
     "answer": "베들레헴",
     "explanation": "예수님은 다윗의 동네인 베들레헴에서 태어나셨습니다.",
-    "reference": "누가복음 2:4-7"
+    "reference": "누가복음 2:4-7",
+    "difficulty": "easy"
   },
   {
     "id": "q3",
@@ -23,7 +25,8 @@
     "options": ["골리앗", "사울", "아브넬", "요압"],
     "answer": "골리앗",
     "explanation": "다윗은 물매와 돌로 블레셋 장수 골리앗을 쓰러뜨렸습니다.",
-    "reference": "사무엘상 17장"
+    "reference": "사무엘상 17:49-50",
+    "difficulty": "easy"
   },
   {
     "id": "q4",
@@ -31,7 +34,8 @@
     "question": "예수님의 첫 번째 기적은 [빈칸]에서 물을 포도주로 바꾸신 것이다.",
     "answer": "가나",
     "explanation": "예수님의 첫 번째 기적은 갈릴리 가나의 혼인 잔치에서 물을 포도주로 바꾸신 것입니다.",
-    "reference": "요한복음 2:1-11"
+    "reference": "요한복음 2:1-11",
+    "difficulty": "easy"
   },
   {
     "id": "q5",
@@ -39,7 +43,8 @@
     "question": "모세는 가나안 땅에 들어갔다.",
     "answer": false,
     "explanation": "모세는 느보 산에서 가나안 땅을 바라본 후 죽었으며, 가나안 땅에 들어가지 못했습니다.",
-    "reference": "신명기 34:1-5"
+    "reference": "신명기 34:1-5",
+    "difficulty": "easy"
   },
   {
     "id": "q6",
@@ -48,7 +53,8 @@
     "options": ["창세기", "출애굽기", "요한복음", "시편"],
     "answer": "창세기",
     "explanation": "성경의 첫 번째 책은 창세기입니다.",
-    "reference": "성경의 구성"
+    "reference": "성경의 구성",
+    "difficulty": "easy"
   },
   {
     "id": "q7",
@@ -56,7 +62,8 @@
     "question": "예수님의 제자 중 배반한 사람은 [빈칸]이다.",
     "answer": "가룟 유다",
     "explanation": "예수님을 은 30냥에 팔아넘긴 제자는 가룟 유다입니다.",
-    "reference": "마태복음 26:14-16"
+    "reference": "마태복음 26:14-16",
+    "difficulty": "easy"
   },
   {
     "id": "q8",
@@ -64,7 +71,8 @@
     "question": "사도 바울은 원래 이름이 사울이었다.",
     "answer": true,
     "explanation": "사도 바울은 회심하기 전에는 사울이라는 이름을 가지고 있었습니다.",
-    "reference": "사도행전 13:9"
+    "reference": "사도행전 13:9",
+    "difficulty": "easy"
   },
   {
     "id": "q9",
@@ -73,7 +81,8 @@
     "options": ["마리아 막달라", "베드로", "요한", "도마"],
     "answer": "마리아 막달라",
     "explanation": "예수님은 부활 후 처음으로 마리아 막달라에게 나타나셨습니다.",
-    "reference": "요한복음 20:11-18"
+    "reference": "요한복음 20:11-18",
+    "difficulty": "easy"
   },
   {
     "id": "q10",
@@ -81,6 +90,195 @@
     "question": "모세의 형은 [빈칸]이다.",
     "answer": "아론",
     "explanation": "모세의 형은 아론으로, 그는 이스라엘의 첫 번째 대제사장이 되었습니다.",
-    "reference": "출애굽기 4:14"
+    "reference": "출애굽기 4:14",
+    "difficulty": "easy"
+  },
+  {
+    "id": "q11",
+    "type": "multiple-choice",
+    "question": "노아의 세 아들은 셈, 함, 그리고 누구였는가?",
+    "options": ["야벳", "에녹", "야곱", "에서"],
+    "answer": "야벳",
+    "explanation": "노아의 세 아들은 셈, 함, 야벳이었습니다.",
+    "reference": "창세기 5:32",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q12",
+    "type": "fill-blank",
+    "question": "예수님이 부활하신 후 40일 동안 제자들에게 보이시다가 [빈칸]으로 올라가셨다.",
+    "answer": "하늘",
+    "explanation": "예수님은 부활 후 40일 동안 제자들에게 보이시다가 하늘로 올라가셨습니다.",
+    "reference": "사도행전 1:3-9",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q13",
+    "type": "true-false",
+    "question": "아브라함의 아내 사라는 130세에 이삭을 낳았다.",
+    "answer": false,
+    "explanation": "사라는 90세에 이삭을 낳았습니다.",
+    "reference": "창세기 17:17",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q14",
+    "type": "multiple-choice",
+    "question": "성령 강림 사건은 어떤 유대 절기에 일어났는가?",
+    "options": ["오순절", "유월절", "초막절", "속죄일"],
+    "answer": "오순절",
+    "explanation": "성령은 오순절에 제자들에게 강림하셨습니다.",
+    "reference": "사도행전 2:1-4",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q15",
+    "type": "fill-blank",
+    "question": "요나는 [빈칸] 도시로 가서 회개를 전하라는 하나님의 말씀을 거역했다.",
+    "answer": "니느웨",
+    "explanation": "요나는 니느웨 도시로 가서 회개를 전하라는 하나님의 명령을 거역했습니다.",
+    "reference": "요나 1:1-3",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q16",
+    "type": "multiple-choice",
+    "question": "다음 중 바울이 1차 전도여행에서 방문한 지역이 아닌 곳은?",
+    "options": ["에베소", "비시디아 안디옥", "이고니온", "루스드라"],
+    "answer": "에베소",
+    "explanation": "에베소는 바울의 2차와 3차 전도여행에서 방문했습니다.",
+    "reference": "사도행전 13-14장",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q17",
+    "type": "true-false",
+    "question": "에녹은 하나님과 동행하다가 죽지 않고 하늘로 올라갔다.",
+    "answer": true,
+    "explanation": "에녹은 하나님과 동행하다가 죽지 않고 하나님이 데려가셨습니다.",
+    "reference": "창세기 5:24",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q18",
+    "type": "fill-blank",
+    "question": "바울이 개종되기 전, 스데반이 순교할 때 그의 옷을 지켜보았던 사람의 이름은 [빈칸]이다.",
+    "answer": "사울",
+    "explanation": "바울은 회심하기 전 사울이라는 이름으로 스데반이 돌에 맞아 죽을 때 그의 옷을 지켜보았습니다.",
+    "reference": "사도행전 7:58",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q19",
+    "type": "multiple-choice",
+    "question": "모세가 광야에서 이스라엘 백성을 인도한 기간은?",
+    "options": ["40년", "30년", "20년", "10년"],
+    "answer": "40년",
+    "explanation": "모세는 40년 동안 광야에서 이스라엘 백성을 인도했습니다.",
+    "reference": "민수기 14:33-34",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q20",
+    "type": "true-false",
+    "question": "열두 사도 중 하나인 베드로는 어부였다.",
+    "answer": true,
+    "explanation": "베드로는 예수님을 만나기 전 갈릴리 바다에서 어부로 일했습니다.",
+    "reference": "마태복음 4:18",
+    "difficulty": "medium"
+  },
+  {
+    "id": "q21",
+    "type": "multiple-choice",
+    "question": "요셉이 바로의 꿈을 해석했을 때, 풍년과 흉년은 각각 몇 년이었는가?",
+    "options": ["각각 7년", "각각 3년", "풍년 7년, 흉년 3년", "풍년 3년, 흉년 7년"],
+    "answer": "각각 7년",
+    "explanation": "요셉은 바로의 꿈을 해석하여 7년의 풍년과 7년의 흉년이 올 것을 예언했습니다.",
+    "reference": "창세기 41:25-30",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q22",
+    "type": "fill-blank",
+    "question": "바울이 3차 전도여행 중 에베소에서 [빈칸] 여신의 신상을 만드는 은장색들의 소요를 일으켰다.",
+    "answer": "아데미",
+    "explanation": "바울이 에베소에서 전도할 때 아데미 여신의 신상을 만드는 은장색들이 소요를 일으켰습니다.",
+    "reference": "사도행전 19:23-41",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q23",
+    "type": "multiple-choice",
+    "question": "다윗이 밧세바와 동침한 후 그녀의 남편 우리아를 죽게 한 전쟁은?",
+    "options": ["암몬 전쟁", "블레셋 전쟁", "시리아 전쟁", "에돔 전쟁"],
+    "answer": "암몬 전쟁",
+    "explanation": "다윗은 암몬과의 전쟁 중에 우리아를 전선의 최전방에 배치해 죽게 했습니다.",
+    "reference": "사무엘하 11:1-17",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q24",
+    "type": "true-false",
+    "question": "바울은 로마에서 참수형으로 순교했다.",
+    "answer": true,
+    "explanation": "전통에 따르면 바울은 로마 황제 네로 통치 시기에 로마에서 참수형으로 순교했습니다.",
+    "reference": "교회 전통",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q25",
+    "type": "fill-blank",
+    "question": "모세의 장인은 [빈칸]이다.",
+    "answer": "이드로",
+    "explanation": "모세의 장인은 미디안의 제사장 이드로였으며, 그의 딸 십보라를 모세와 결혼시켰습니다.",
+    "reference": "출애굽기 3:1",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q26",
+    "type": "multiple-choice",
+    "question": "솔로몬 성전 건축은 몇 년이 걸렸는가?",
+    "options": ["7년", "3년", "10년", "12년"],
+    "answer": "7년",
+    "explanation": "솔로몬은 예루살렘 성전을 건축하는 데 7년이 걸렸습니다.",
+    "reference": "열왕기상 6:38",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q27",
+    "type": "true-false",
+    "question": "바울은 12제자 중 한 명이었다.",
+    "answer": false,
+    "explanation": "바울은 12제자 중 한 명이 아니었으며, 예수님 승천 후에 부르심을 받았습니다.",
+    "reference": "사도행전 9:1-19",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q28",
+    "type": "fill-blank",
+    "question": "이사야서 53장은 고난 받는 [빈칸]을 예언한다.",
+    "answer": "종",
+    "explanation": "이사야서 53장은 고난 받는 종에 대한 예언으로, 메시아의 고난을 예언한 것으로 해석됩니다.",
+    "reference": "이사야 53:1-12",
+    "difficulty": "hard"  
+  },
+  {
+    "id": "q29",
+    "type": "multiple-choice",
+    "question": "12제자가 아닌 사람은?",
+    "options": ["디모데", "안드레", "야고보", "빌립"],
+    "answer": "디모데",
+    "explanation": "디모데는 바울의 제자였고, 12제자가 아니었습니다.",
+    "reference": "마태복음 10:2-4",
+    "difficulty": "hard"
+  },
+  {
+    "id": "q30",
+    "type": "true-false",
+    "question": "사도 요한은 밧모 섬에서 요한계시록을 기록했다.",
+    "answer": true,
+    "explanation": "요한은 밧모 섬에 유배되어 있을 때 요한계시록을 기록했습니다.",
+    "reference": "요한계시록 1:9",
+    "difficulty": "hard"
   }
 ] 

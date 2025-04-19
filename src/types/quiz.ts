@@ -1,6 +1,9 @@
 // 퀴즈 유형 정의
 export type QuizType = 'multiple-choice' | 'fill-blank' | 'true-false';
 
+// 퀴즈 난이도 정의
+export type QuizDifficulty = 'easy' | 'medium' | 'hard';
+
 // 퀴즈 아이템 인터페이스 - 기본
 export interface BaseQuizItem {
   id: string;
@@ -9,6 +12,7 @@ export interface BaseQuizItem {
   answer: string | boolean;
   explanation: string;
   reference: string;
+  difficulty: QuizDifficulty;
 }
 
 // 객관식 퀴즈 인터페이스
