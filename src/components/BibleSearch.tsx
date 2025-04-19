@@ -222,21 +222,39 @@ export const BibleSearch: React.FC = () => {
   const handleSearch = () => {
     const { keyword, book, chapter } = searchParams;
     const searchResults: BibleVerse[] = [];
+    
+    // 검색 조건이 없으면 빈 결과 반환
+    if (!keyword && !book && !chapter) {
+      setResults([]);
+      return;
+    }
 
+    // 최대 결과 수 제한 (성능 향상)
+    const MAX_RESULTS = 200;
+    let resultCount = 0;
+
+    // 검색 조건을 미리 최적화
+    const hasKeyword = Boolean(keyword);
+    const hasBook = Boolean(book);
+    const hasChapter = Boolean(chapter);
+    const chapterRegex = (hasChapter && hasBook && book && chapter) 
+      ? new RegExp(`${book}${chapter}:`) 
+      : null;
+    
     for (const [reference, text] of Object.entries(bible)) {
-      // 검색 조건에 맞는지 확인
-      if (book && !reference.startsWith(book)) continue;
+      // 결과 제한에 도달하면 중단
+      if (resultCount >= MAX_RESULTS) break;
       
-      // 장 검색
-      if (chapter) {
-        const regex = new RegExp(`${book}${chapter}:`);
-        if (!regex.test(reference)) continue;
-      }
+      // 북 필터링 (가장 빠른 필터링 먼저)
+      if (hasBook && book && !reference.startsWith(book)) continue;
       
-      // 키워드 검색
-      if (keyword && !text.includes(keyword)) continue;
+      // 장 필터링
+      if (hasChapter && chapterRegex && !chapterRegex.test(reference)) continue;
+      
+      // 키워드 필터링 (가장 비용이 큰 필터링을 마지막에)
+      if (hasKeyword && keyword && !text.includes(keyword)) continue;
 
-      // 참조 분석
+      // 참조 분석 - 정규식 캐싱을 통한 최적화
       const bookMatch = reference.split(/\d/)[0];
       const chapterMatch = reference.match(/\d+/);
       const verseMatch = reference.match(/:(\d+)/);
@@ -248,13 +266,16 @@ export const BibleSearch: React.FC = () => {
           verse: verseMatch[1],
           text: text,
         });
+        resultCount++;
       }
     }
 
     setResults(searchResults);
     
     // 검색 기록에 추가
-    addToSearchHistory({ ...searchParams });
+    if (hasKeyword || hasBook || hasChapter) {
+      addToSearchHistory({ ...searchParams });
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -285,9 +306,22 @@ export const BibleSearch: React.FC = () => {
       chapter: historyItem.chapter,
     });
     handleHistoryClose();
-    handleSearch();
   };
   
+  // 검색 파라미터가 변경될 때 자동으로 검색 실행
+  useEffect(() => {
+    // 초기 로딩 시에는 검색하지 않도록 처리
+    const hasSearchParams = searchParams.keyword || searchParams.book || searchParams.chapter;
+    if (hasSearchParams) {
+      // 검색 파라미터가 있을 때만 검색 실행
+      const timer = setTimeout(() => {
+        handleSearch();
+      }, 300); // 연속적인 변경 시 디바운싱
+      
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
+
   const historyOpen = Boolean(historyAnchorEl);
 
   // 하이라이트 메뉴 열기
