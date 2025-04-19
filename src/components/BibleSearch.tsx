@@ -48,6 +48,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import bibleData from '../data/bible.json';
 import { BibleData, BibleVerse, SearchParams, BookmarkItem } from '../types/bible';
 import { FontSizeContext, ColorModeContext, BookmarkContext } from '../App';
+import TextToSpeechButton from './TextToSpeechButton';
 
 // 로컬 스토리지 키
 const SEARCH_HISTORY_KEY = 'bible-search-history';
@@ -721,6 +722,8 @@ export const BibleSearch: React.FC = () => {
                           <ContentCopyIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
+
+                      <TextToSpeechButton text={verse.text} />
                     </Box>
                   </Box>
                   
