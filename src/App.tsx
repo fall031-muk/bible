@@ -2,8 +2,10 @@ import React, { useState, createContext, useCallback, useEffect } from 'react';
 import { CssBaseline, ThemeProvider, createTheme, PaletteMode, Tabs, Tab, Box } from '@mui/material';
 import { BibleSearch } from './components/BibleSearch';
 import { BibleQuiz } from './components/BibleQuiz';
+import About from './components/About';
 import SearchIcon from '@mui/icons-material/Search';
 import QuizIcon from '@mui/icons-material/Quiz';
+import InfoIcon from '@mui/icons-material/Info';
 import { BookmarkItem, BookmarksCollection } from './types/bible';
 
 // 로컬 스토리지 키
@@ -248,30 +250,17 @@ function App() {
             toggleHighlight,
             isBookmarked,
             getBookmarkById,
-            getBookmarkByReference
+            getBookmarkByReference,
           }}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs 
-                  value={tabValue} 
-                  onChange={handleTabChange} 
-                  aria-label="성경 탭"
-                  variant="fullWidth"
-                  centered
-                >
-                  <Tab 
-                    icon={<SearchIcon />} 
-                    label="성경 검색" 
-                    {...a11yProps(0)} 
-                  />
-                  <Tab 
-                    icon={<QuizIcon />} 
-                    label="성경 퀴즈" 
-                    {...a11yProps(1)} 
-                  />
+                <Tabs value={tabValue} onChange={handleTabChange} aria-label="bible tabs">
+                  <Tab icon={<SearchIcon />} label="성경 검색" {...a11yProps(0)} />
+                  <Tab icon={<QuizIcon />} label="성경 퀴즈" {...a11yProps(1)} />
+                  <Tab icon={<InfoIcon />} label="사이트 소개" {...a11yProps(2)} />
                 </Tabs>
               </Box>
               <TabPanel value={tabValue} index={0}>
@@ -279,6 +268,9 @@ function App() {
               </TabPanel>
               <TabPanel value={tabValue} index={1}>
                 <BibleQuiz />
+              </TabPanel>
+              <TabPanel value={tabValue} index={2}>
+                <About />
               </TabPanel>
             </Box>
           </ThemeProvider>
