@@ -257,7 +257,13 @@ function App() {
             <CssBaseline />
             <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={tabValue} onChange={handleTabChange} aria-label="bible tabs">
+                <Tabs 
+                  value={tabValue} 
+                  onChange={handleTabChange} 
+                  aria-label="bible tabs"
+                  variant="fullWidth"
+                  centered
+                >
                   <Tab icon={<SearchIcon />} label="성경 검색" {...a11yProps(0)} />
                   <Tab icon={<QuizIcon />} label="성경 퀴즈" {...a11yProps(1)} />
                   <Tab icon={<InfoIcon />} label="사이트 소개" {...a11yProps(2)} />
