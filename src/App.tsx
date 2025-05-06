@@ -1,11 +1,17 @@
 import React, { useState, createContext, useCallback, useEffect } from 'react';
-import { CssBaseline, ThemeProvider, createTheme, PaletteMode, Tabs, Tab, Box } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme, PaletteMode, AppBar, Toolbar, Typography, Button, Box, Collapse } from '@mui/material';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { BibleSearch } from './components/BibleSearch';
 import { BibleQuiz } from './components/BibleQuiz';
 import About from './components/About';
+import Privacy from './components/Privacy';
+import Contact from './components/Contact';
 import SearchIcon from '@mui/icons-material/Search';
 import QuizIcon from '@mui/icons-material/Quiz';
 import InfoIcon from '@mui/icons-material/Info';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
+import MenuIcon from '@mui/icons-material/Menu';
 import { BookmarkItem, BookmarksCollection } from './types/bible';
 
 // 로컬 스토리지 키
@@ -48,52 +54,178 @@ export const BookmarkContext = createContext<BookmarkContextType>({
   getBookmarkByReference: () => undefined,
 });
 
-// 탭 인터페이스 컴포넌트
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
+function Navigation() {
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = React.useContext(FontSizeContext);
+  
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`bible-tabpanel-${index}`}
-      aria-labelledby={`bible-tab-${index}`}
-      style={{ width: '100%', height: '100%' }}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ width: '100%', height: '100%' }}>
-          {children}
+    <AppBar position="static" color="default" elevation={1}>
+      <Toolbar sx={{ flexWrap: 'wrap', gap: 1 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          flexGrow: 1,
+          gap: 1
+        }}>
+          <Typography variant="h6" component="div">
+            Bible Muk
+          </Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            gap: 0.5
+          }}>
+            <Button
+              onClick={decreaseFontSize}
+              size="small"
+              sx={{ minWidth: 'auto', px: 0.5 }}
+            >
+              A-
+            </Button>
+            <Button
+              onClick={resetFontSize}
+              size="small"
+              sx={{ minWidth: 'auto', px: 0.5 }}
+            >
+              A
+            </Button>
+            <Button
+              onClick={increaseFontSize}
+              size="small"
+              sx={{ minWidth: 'auto', px: 0.5 }}
+            >
+              A+
+            </Button>
+          </Box>
         </Box>
-      )}
-    </div>
+
+        {/* 데스크톱 메뉴 */}
+        <Box sx={{ 
+          display: { xs: 'none', md: 'flex' }, 
+          gap: 2 
+        }}>
+          <Button
+            component={Link}
+            to="/"
+            color={location.pathname === '/' ? 'primary' : 'inherit'}
+            startIcon={<SearchIcon />}
+          >
+            성경 검색
+          </Button>
+          <Button
+            component={Link}
+            to="/quiz"
+            color={location.pathname === '/quiz' ? 'primary' : 'inherit'}
+            startIcon={<QuizIcon />}
+          >
+            성경 퀴즈
+          </Button>
+          <Button
+            component={Link}
+            to="/about"
+            color={location.pathname === '/about' ? 'primary' : 'inherit'}
+            startIcon={<InfoIcon />}
+          >
+            사이트 소개
+          </Button>
+          <Button
+            component={Link}
+            to="/contact"
+            color={location.pathname === '/contact' ? 'primary' : 'inherit'}
+            startIcon={<ContactMailIcon />}
+          >
+            문의하기
+          </Button>
+          <Button
+            component={Link}
+            to="/privacy"
+            color={location.pathname === '/privacy' ? 'primary' : 'inherit'}
+            startIcon={<PrivacyTipIcon />}
+          >
+            개인정보처리방침
+          </Button>
+        </Box>
+
+        {/* 모바일 메뉴 버튼 */}
+        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            startIcon={<MenuIcon />}
+          >
+            메뉴
+          </Button>
+        </Box>
+      </Toolbar>
+
+      {/* 모바일 메뉴 */}
+      <Collapse in={mobileMenuOpen}>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          padding: '0.5rem 1rem',
+          backgroundColor: 'background.paper'
+        }}>
+          <Button
+            component={Link}
+            to="/"
+            color={location.pathname === '/' ? 'primary' : 'inherit'}
+            startIcon={<SearchIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            성경 검색
+          </Button>
+          <Button
+            component={Link}
+            to="/quiz"
+            color={location.pathname === '/quiz' ? 'primary' : 'inherit'}
+            startIcon={<QuizIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            성경 퀴즈
+          </Button>
+          <Button
+            component={Link}
+            to="/about"
+            color={location.pathname === '/about' ? 'primary' : 'inherit'}
+            startIcon={<InfoIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            사이트 소개
+          </Button>
+          <Button
+            component={Link}
+            to="/contact"
+            color={location.pathname === '/contact' ? 'primary' : 'inherit'}
+            startIcon={<ContactMailIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            문의하기
+          </Button>
+          <Button
+            component={Link}
+            to="/privacy"
+            color={location.pathname === '/privacy' ? 'primary' : 'inherit'}
+            startIcon={<PrivacyTipIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            개인정보처리방침
+          </Button>
+        </Box>
+      </Collapse>
+    </AppBar>
   );
 }
 
-// 접근성을 위한 속성 생성 함수
-function a11yProps(index: number) {
-  return {
-    id: `bible-tab-${index}`,
-    'aria-controls': `bible-tabpanel-${index}`,
-  };
-}
-
 function App() {
-  const [fontSize, setFontSize] = useState(16); // 기본 글자 크기 16px
-  const [mode, setMode] = useState<PaletteMode>('light'); // 기본 라이트 모드
+  const [fontSize, setFontSize] = useState(16);
+  const [mode, setMode] = useState<PaletteMode>('light');
   const [bookmarks, setBookmarks] = useState<BookmarksCollection>({});
-  const [tabValue, setTabValue] = useState(0); // 현재 선택된 탭
-
-  // 탭 변경 핸들러
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
 
   // 북마크 불러오기
   useEffect(() => {
@@ -227,62 +359,40 @@ function App() {
   });
 
   return (
-    <ColorModeContext.Provider
-      value={{
-        mode,
-        toggleColorMode
-      }}
-    >
-      <FontSizeContext.Provider 
-        value={{ 
-          fontSize, 
-          increaseFontSize, 
-          decreaseFontSize, 
-          resetFontSize 
-        }}
-      >
-        <BookmarkContext.Provider
-          value={{
-            bookmarks,
-            addBookmark,
-            removeBookmark,
-            updateBookmark,
-            toggleHighlight,
-            isBookmarked,
-            getBookmarkById,
-            getBookmarkByReference,
-          }}
-        >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs 
-                  value={tabValue} 
-                  onChange={handleTabChange} 
-                  aria-label="bible tabs"
-                  variant="fullWidth"
-                  centered
-                >
-                  <Tab icon={<SearchIcon />} label="성경 검색" {...a11yProps(0)} />
-                  <Tab icon={<QuizIcon />} label="성경 퀴즈" {...a11yProps(1)} />
-                  <Tab icon={<InfoIcon />} label="사이트 소개" {...a11yProps(2)} />
-                </Tabs>
+    <Router>
+      <ColorModeContext.Provider value={{ mode, toggleColorMode }}>
+        <FontSizeContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize, resetFontSize }}>
+          <BookmarkContext.Provider
+            value={{
+              bookmarks,
+              addBookmark,
+              removeBookmark,
+              updateBookmark,
+              toggleHighlight,
+              isBookmarked,
+              getBookmarkById,
+              getBookmarkByReference,
+            }}
+          >
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+                <Navigation />
+                <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+                  <Routes>
+                    <Route path="/" element={<BibleSearch />} />
+                    <Route path="/quiz" element={<BibleQuiz />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                  </Routes>
+                </Box>
               </Box>
-              <TabPanel value={tabValue} index={0}>
-                <BibleSearch />
-              </TabPanel>
-              <TabPanel value={tabValue} index={1}>
-                <BibleQuiz />
-              </TabPanel>
-              <TabPanel value={tabValue} index={2}>
-                <About />
-              </TabPanel>
-            </Box>
-          </ThemeProvider>
-        </BookmarkContext.Provider>
-      </FontSizeContext.Provider>
-    </ColorModeContext.Provider>
+            </ThemeProvider>
+          </BookmarkContext.Provider>
+        </FontSizeContext.Provider>
+      </ColorModeContext.Provider>
+    </Router>
   );
 }
 

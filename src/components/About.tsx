@@ -15,18 +15,64 @@ const Title = styled.h1`
 
 const Section = styled.section`
   margin-bottom: 2rem;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 `;
 
 const SubTitle = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 1rem;
   color: #444;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const Paragraph = styled.p`
   line-height: 1.6;
   margin-bottom: 1rem;
   color: #666;
+`;
+
+const FeatureList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const FeatureItem = styled.li`
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+  
+  &:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #1976d2;
+  }
+`;
+
+const DailyVerse = styled.div`
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border-left: 4px solid #1976d2;
+`;
+
+const VerseText = styled.p`
+  font-style: italic;
+  color: #333;
+  margin-bottom: 0.5rem;
+`;
+
+const VerseReference = styled.p`
+  color: #666;
+  text-align: right;
+  font-size: 0.9rem;
 `;
 
 const ContactInfo = styled.div`
@@ -48,20 +94,49 @@ const Label = styled.span`
 const About: React.FC = () => {
   return (
     <AboutContainer>
-      <Title>사이트 소개</Title>
+      <Title>📖 성경 검색 사이트 소개</Title>
       
       <Section>
-        <SubTitle>성경 구절 검색 서비스</SubTitle>
+        <SubTitle>📚 성경 버전</SubTitle>
         <Paragraph>
-          이 웹사이트는 성경 구절을 쉽고 빠르게 검색하고 공유할 수 있는 서비스를 제공합니다.
-          다양한 성경 번역본과 함께, 성경 말씀을 더 깊이 이해하고 나누는 데 도움이 되기를 바랍니다.
+          본 사이트는 개역개정 성경을 기본으로 제공합니다. 
+          성경 말씀을 정확하고 이해하기 쉽게 전달하는 것을 목표로 합니다.
         </Paragraph>
       </Section>
 
       <Section>
-        <SubTitle>운영 정보</SubTitle>
+        <SubTitle>🔍 주요 기능</SubTitle>
+        <FeatureList>
+          <FeatureItem>성경 구절 빠른 검색</FeatureItem>
+          <FeatureItem>북마크 기능으로 중요 구절 저장</FeatureItem>
+          <FeatureItem>성경 퀴즈로 말씀 학습</FeatureItem>
+          <FeatureItem>다크 모드 지원</FeatureItem>
+          <FeatureItem>글자 크기 조절 기능</FeatureItem>
+        </FeatureList>
+      </Section>
+
+      <DailyVerse>
+        <SubTitle>📌 오늘의 추천 구절</SubTitle>
+        <VerseText>
+          "여호와는 나의 목자시니 내가 부족함이 없으리로다"
+        </VerseText>
+        <VerseReference>시편 23:1</VerseReference>
+      </DailyVerse>
+
+      <Section>
+        <SubTitle>💡 서비스 제작 의도</SubTitle>
         <Paragraph>
-          이 사이트는 개인적으로 운영하며, 성경 말씀을 더 많은 사람들과 나누고자 하는 목적으로 시작되었습니다.
+          이 웹사이트는 성경 말씀을 더 쉽고 편리하게 접할 수 있도록 만들었습니다.
+          디지털 시대에 맞춰 성경 말씀을 더 많은 분들과 나누고자 하는 마음으로 시작되었습니다.
+        </Paragraph>
+      </Section>
+
+      <Section>
+        <SubTitle>👨‍💻 개발자 소개</SubTitle>
+        <Paragraph>
+          안녕하세요, 이 웹사이트의 개발자입니다.
+          성경 말씀을 사랑하고, 더 많은 분들이 말씀을 쉽게 접할 수 있도록 돕고 싶어 이 서비스를 만들게 되었습니다.
+          여러분의 피드백과 제안을 기다리고 있습니다.
         </Paragraph>
       </Section>
 

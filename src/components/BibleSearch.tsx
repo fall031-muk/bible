@@ -482,6 +482,7 @@ export const BibleSearch: React.FC = () => {
           right: isMobile ? 0 : 'auto',
           display: 'flex',
           alignItems: 'center',
+          gap: 1
         }}>
           {/* 북마크 버튼 */}
           <Tooltip title="북마크">
@@ -489,7 +490,6 @@ export const BibleSearch: React.FC = () => {
               onClick={handleBookmarkMenuOpen}
               color="inherit" 
               size={isMobile ? "small" : "medium"}
-              sx={{ mr: 1 }}
             >
               <Badge badgeContent={Object.keys(bookmarks).length} color="primary">
                 <BookmarkIcon />
@@ -503,7 +503,6 @@ export const BibleSearch: React.FC = () => {
               onClick={handleHistoryClick}
               color="inherit" 
               size={isMobile ? "small" : "medium"}
-              sx={{ mr: 1 }}
             >
               <HistoryIcon />
             </IconButton>
@@ -515,15 +514,8 @@ export const BibleSearch: React.FC = () => {
               onClick={toggleColorMode} 
               color="inherit" 
               size={isMobile ? "small" : "medium"}
-              sx={{ mr: 1 }}
             >
               {mode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
-            </IconButton>
-          </Tooltip>
-          
-          <Tooltip title="글자 크기 조절">
-            <IconButton onClick={toggleFontControls} color="primary" size={isMobile ? "small" : "medium"}>
-              <ZoomInIcon />
             </IconButton>
           </Tooltip>
           
@@ -533,7 +525,6 @@ export const BibleSearch: React.FC = () => {
               spacing={1} 
               sx={{ 
                 display: 'inline-flex', 
-                ml: 1,
                 p: isMobile ? 1 : 0,
                 bgcolor: isMobile ? 'background.paper' : 'transparent',
                 boxShadow: isMobile ? 1 : 0,
