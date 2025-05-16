@@ -1,6 +1,7 @@
 {
   "short_name": "성경 검색",
-  "name": "성경 검색 애플리케이션",
+  "name": "성경 검색 - 빠르고 정확한 성경 구절 검색 서비스",
+  "description": "성경 구절을 쉽고 빠르게 검색할 수 있는 무료 성경 검색 서비스입니다.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +11,22 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "categories": ["reference", "books", "education"],
+  "lang": "ko",
+  "dir": "ltr"
 } 
