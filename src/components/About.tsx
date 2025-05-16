@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { dailyVerses } from '../data/dailyVerses';
 
 const AboutContainer = styled.div`
   max-width: 800px;
@@ -92,6 +93,17 @@ const Label = styled.span`
 `;
 
 const About: React.FC = () => {
+  const getDailyVerse = () => {
+    const today = new Date();
+    const startOfYear = new Date(today.getFullYear(), 0, 0);
+    const diff = today.getTime() - startOfYear.getTime();
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const verseIndex = dayOfYear % dailyVerses.length;
+    return dailyVerses[verseIndex];
+  };
+
+  const dailyVerse = getDailyVerse();
+
   return (
     <AboutContainer>
       <Title>📖 성경 검색 사이트 소개</Title>
@@ -116,11 +128,11 @@ const About: React.FC = () => {
       </Section>
 
       <DailyVerse>
-        <SubTitle>📌 오늘의 추천 구절</SubTitle>
+        <SubTitle>📌 오늘의 말씀</SubTitle>
         <VerseText>
-          "여호와는 나의 목자시니 내가 부족함이 없으리로다"
+          "{dailyVerse.text}"
         </VerseText>
-        <VerseReference>시편 23:1</VerseReference>
+        <VerseReference>{dailyVerse.reference} ({dailyVerse.translation})</VerseReference>
       </DailyVerse>
 
       <Section>
