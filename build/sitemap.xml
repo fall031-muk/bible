@@ -1,1 +1,75 @@
-<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"><url><loc>https://bible-search.netlify.app/</loc><changefreq>daily</changefreq><priority>1.0</priority></url><url><loc>https://bible-search.netlify.app/search</loc><changefreq>daily</changefreq><priority>0.9</priority></url><url><loc>https://bible-search.netlify.app/quiz</loc><changefreq>daily</changefreq><priority>0.8</priority></url><url><loc>https://bible-search.netlify.app/about</loc><changefreq>monthly</changefreq><priority>0.5</priority></url></urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  
+  <!-- 메인 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://bible-search.netlify.app/og-image.jpg</image:loc>
+      <image:title>성경 검색 메인</image:title>
+    </image:image>
+  </url>
+
+  <!-- 검색 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/search</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 퀴즈 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/quiz</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- About 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/about</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- 성경 구약 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/old-testament</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 성경 신약 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/new-testament</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 북마크 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/bookmarks</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- 도움말 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/help</loc>
+    <lastmod>2024-03-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+</urlset>
