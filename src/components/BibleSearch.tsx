@@ -145,6 +145,48 @@ export const BibleSearch: React.FC = () => {
     }
   }, [searchParams.book]);
 
+  // 초기 추천 구절 설정
+  useEffect(() => {
+    const recommendedVerses: BibleVerse[] = [];
+    
+    // 요한복음 3:16
+    const john316 = bible['요3:16'];
+    if (john316) {
+      recommendedVerses.push({
+        book: '요한복음',
+        chapter: '3',
+        verse: '16',
+        text: john316
+      });
+    }
+    
+    // 시편 23:1
+    const psalm231 = bible['시23:1'];
+    if (psalm231) {
+      recommendedVerses.push({
+        book: '시편',
+        chapter: '23',
+        verse: '1',
+        text: psalm231
+      });
+    }
+    
+    // 로마서 8:28
+    const romans828 = bible['롬8:28'];
+    if (romans828) {
+      recommendedVerses.push({
+        book: '로마서',
+        chapter: '8',
+        verse: '28',
+        text: romans828
+      });
+    }
+    
+    if (recommendedVerses.length > 0) {
+      setResults(recommendedVerses);
+    }
+  }, []);
+
   // 검색 기록에 추가
   const addToSearchHistory = (params: SearchParams) => {
     // 빈 검색은 기록하지 않음
@@ -223,9 +265,46 @@ export const BibleSearch: React.FC = () => {
     const { keyword, book, chapter } = searchParams;
     const searchResults: BibleVerse[] = [];
     
-    // 검색 조건이 없으면 빈 결과 반환
+    // 검색 조건이 없으면 추천 구절 표시
     if (!keyword && !book && !chapter) {
-      setResults([]);
+      const recommendedVerses: BibleVerse[] = [];
+      
+      // 요한복음 3:16
+      const john316 = bible['요3:16'];
+      if (john316) {
+        recommendedVerses.push({
+          book: '요한복음',
+          chapter: '3',
+          verse: '16',
+          text: john316
+        });
+      }
+      
+      // 시편 23:1
+      const psalm231 = bible['시23:1'];
+      if (psalm231) {
+        recommendedVerses.push({
+          book: '시편',
+          chapter: '23',
+          verse: '1',
+          text: psalm231
+        });
+      }
+      
+      // 로마서 8:28
+      const romans828 = bible['롬8:28'];
+      if (romans828) {
+        recommendedVerses.push({
+          book: '로마서',
+          chapter: '8',
+          verse: '28',
+          text: romans828
+        });
+      }
+      
+      if (recommendedVerses.length > 0) {
+        setResults(recommendedVerses);
+      }
       return;
     }
 
@@ -270,7 +349,52 @@ export const BibleSearch: React.FC = () => {
       }
     }
 
-    setResults(searchResults);
+    if (searchResults.length === 0) {
+      // 검색 결과가 없을 때 추천 구절 표시
+      const recommendedVerses: BibleVerse[] = [];
+      
+      // 요한복음 3:16
+      const john316 = bible['요3:16'];
+      if (john316) {
+        recommendedVerses.push({
+          book: '요한복음',
+          chapter: '3',
+          verse: '16',
+          text: john316
+        });
+      }
+      
+      // 시편 23:1
+      const psalm231 = bible['시23:1'];
+      if (psalm231) {
+        recommendedVerses.push({
+          book: '시편',
+          chapter: '23',
+          verse: '1',
+          text: psalm231
+        });
+      }
+      
+      // 로마서 8:28
+      const romans828 = bible['롬8:28'];
+      if (romans828) {
+        recommendedVerses.push({
+          book: '로마서',
+          chapter: '8',
+          verse: '28',
+          text: romans828
+        });
+      }
+      
+      if (recommendedVerses.length > 0) {
+        setResults(recommendedVerses);
+        setSnackbarMessage('검색 결과가 없습니다. 대신 추천 구절을 보여드립니다.');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+      }
+    } else {
+      setResults(searchResults);
+    }
     
     // 검색 기록에 추가
     if (hasKeyword || hasBook || hasChapter) {
