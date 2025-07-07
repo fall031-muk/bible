@@ -6,11 +6,15 @@ import { BibleQuiz } from './components/BibleQuiz';
 import About from './components/About';
 import Privacy from './components/Privacy';
 import Contact from './components/Contact';
+import Terms from './components/Terms';
+import Blog from './components/Blog';
 import SearchIcon from '@mui/icons-material/Search';
 import QuizIcon from '@mui/icons-material/Quiz';
 import InfoIcon from '@mui/icons-material/Info';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
+import DescriptionIcon from '@mui/icons-material/Description';
+import ArticleIcon from '@mui/icons-material/Article';
 import MenuIcon from '@mui/icons-material/Menu';
 import { BookmarkItem, BookmarksCollection } from './types/bible';
 
@@ -145,6 +149,22 @@ function Navigation() {
           >
             개인정보처리방침
           </Button>
+          <Button
+            component={Link}
+            to="/terms"
+            color={location.pathname === '/terms' ? 'primary' : 'inherit'}
+            startIcon={<DescriptionIcon />}
+          >
+            이용약관
+          </Button>
+          <Button
+            component={Link}
+            to="/blog"
+            color={location.pathname === '/blog' ? 'primary' : 'inherit'}
+            startIcon={<ArticleIcon />}
+          >
+            블로그
+          </Button>
         </Box>
 
         {/* 모바일 메뉴 버튼 */}
@@ -215,6 +235,26 @@ function Navigation() {
             sx={{ justifyContent: 'flex-start', mb: 1 }}
           >
             개인정보처리방침
+          </Button>
+          <Button
+            component={Link}
+            to="/terms"
+            color={location.pathname === '/terms' ? 'primary' : 'inherit'}
+            startIcon={<DescriptionIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            이용약관
+          </Button>
+          <Button
+            component={Link}
+            to="/blog"
+            color={location.pathname === '/blog' ? 'primary' : 'inherit'}
+            startIcon={<ArticleIcon />}
+            fullWidth
+            sx={{ justifyContent: 'flex-start', mb: 1 }}
+          >
+            블로그
           </Button>
         </Box>
       </Collapse>
@@ -385,6 +425,8 @@ function App() {
                     <Route path="/about" element={<About />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/blog" element={<Blog />} />
                   </Routes>
                 </Box>
               </Box>
