@@ -425,21 +425,23 @@ const Blog: React.FC = () => {
       </IntroSection>
 
       <BlogGrid>
-        {blogPosts.map(post => (
-          <BlogCard key={post.id}>
-            <BlogMeta>
-              <CategoryTag>{post.category}</CategoryTag>
-              <span>{post.date}</span>
-              <span>by {post.author}</span>
-            </BlogMeta>
-            <BlogTitle>{post.title}</BlogTitle>
-            <BlogContent>
-              <p>{post.content.substring(0, 200)}...</p>
-              <ReadMore onClick={() => handleReadMore(post)}>
-                더 읽기 →
-              </ReadMore>
-            </BlogContent>
-          </BlogCard>
+        {blogPosts.map((post, index) => (
+          <React.Fragment key={post.id}>
+            <BlogCard>
+              <BlogMeta>
+                <CategoryTag>{post.category}</CategoryTag>
+                <span>{post.date}</span>
+                <span>by {post.author}</span>
+              </BlogMeta>
+              <BlogTitle>{post.title}</BlogTitle>
+              <BlogContent>
+                <p>{post.content.substring(0, 200)}...</p>
+                <ReadMore onClick={() => handleReadMore(post)}>
+                  더 읽기 →
+                </ReadMore>
+              </BlogContent>
+            </BlogCard>
+          </React.Fragment>
         ))}
       </BlogGrid>
 
