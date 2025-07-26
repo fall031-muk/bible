@@ -45,4 +45,20 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- 이용약관 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/terms</loc>
+    <lastmod>2024-12-26</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- 블로그 페이지 -->
+  <url>
+    <loc>https://bible-search.netlify.app/blog</loc>
+    <lastmod>2024-12-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
