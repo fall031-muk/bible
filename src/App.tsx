@@ -1,6 +1,7 @@
 import React, { useState, createContext, useCallback, useEffect } from 'react';
 import { CssBaseline, ThemeProvider, createTheme, PaletteMode, AppBar, Toolbar, Typography, Button, Box, Collapse } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { BibleSearch } from './components/BibleSearch';
 import { BibleQuiz } from './components/BibleQuiz';
 import About from './components/About';
@@ -399,42 +400,44 @@ function App() {
   });
 
   return (
-    <Router>
-      <ColorModeContext.Provider value={{ mode, toggleColorMode }}>
-        <FontSizeContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize, resetFontSize }}>
-          <BookmarkContext.Provider
-            value={{
-              bookmarks,
-              addBookmark,
-              removeBookmark,
-              updateBookmark,
-              toggleHighlight,
-              isBookmarked,
-              getBookmarkById,
-              getBookmarkByReference,
-            }}
-          >
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-                <Navigation />
-                <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
-                  <Routes>
-                    <Route path="/" element={<BibleSearch />} />
-                    <Route path="/quiz" element={<BibleQuiz />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/blog" element={<Blog />} />
-                  </Routes>
+    <HelmetProvider>
+      <Router>
+        <ColorModeContext.Provider value={{ mode, toggleColorMode }}>
+          <FontSizeContext.Provider value={{ fontSize, increaseFontSize, decreaseFontSize, resetFontSize }}>
+            <BookmarkContext.Provider
+              value={{
+                bookmarks,
+                addBookmark,
+                removeBookmark,
+                updateBookmark,
+                toggleHighlight,
+                isBookmarked,
+                getBookmarkById,
+                getBookmarkByReference,
+              }}
+            >
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Box sx={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+                  <Navigation />
+                  <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+                    <Routes>
+                      <Route path="/" element={<BibleSearch />} />
+                      <Route path="/quiz" element={<BibleQuiz />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/blog" element={<Blog />} />
+                    </Routes>
+                  </Box>
                 </Box>
-              </Box>
-            </ThemeProvider>
-          </BookmarkContext.Provider>
-        </FontSizeContext.Provider>
-      </ColorModeContext.Provider>
-    </Router>
+              </ThemeProvider>
+            </BookmarkContext.Provider>
+          </FontSizeContext.Provider>
+        </ColorModeContext.Provider>
+      </Router>
+    </HelmetProvider>
   );
 }
 

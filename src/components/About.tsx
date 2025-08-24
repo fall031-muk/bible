@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 import { dailyVerses } from '../data/dailyVerses';
 
 const AboutContainer = styled.div`
@@ -106,6 +107,17 @@ const About: React.FC = () => {
 
   return (
     <AboutContainer>
+      <Helmet>
+        <title>사이트 소개 - Bible Muk | 성경 검색과 학습의 모든 것</title>
+        <meta name="description" content="Bible Muk은 성경 검색, 퀴즈, 북마크 기능을 제공하는 종합 성경 학습 플랫폼입니다. 8개의 전문 블로그 포스트와 다양한 학습 도구로 효과적인 성경 공부를 지원합니다. React 18 기반의 현대적인 웹 기술로 모든 기기에서 최적화된 경험을 제공합니다." />
+        <meta name="keywords" content="Bible Muk 소개, 성경 학습 플랫폼, 성경 검색 서비스, 성경 퀴즈, 북마크 기능, 개역개정 성경, 성경 공부 도구, React 성경 앱" />
+        <meta property="og:title" content="사이트 소개 - Bible Muk | 성경 검색과 학습의 모든 것" />
+        <meta property="og:description" content="Bible Muk은 성경 검색, 퀴즈, 북마크 기능을 제공하는 종합 성경 학습 플랫폼입니다. 8개의 전문 블로그 포스트와 다양한 학습 도구로 효과적인 성경 공부를 지원합니다." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bible-search.netlify.app/about" />
+        <link rel="canonical" href="https://bible-search.netlify.app/about" />
+      </Helmet>
+      
       <Title>📖 성경 검색 사이트 소개</Title>
       
       <Section>
