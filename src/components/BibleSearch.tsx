@@ -49,6 +49,9 @@ import bibleData from '../data/bible.json';
 import { BibleData, BibleVerse, SearchParams, BookmarkItem } from '../types/bible';
 import { FontSizeContext, ColorModeContext, BookmarkContext } from '../App';
 import TextToSpeechButton from './TextToSpeechButton';
+import { blogPosts } from '../data/blogPosts';
+import { Link } from 'react-router-dom';
+import ImageIcon from '@mui/icons-material/Image';
 
 // 로컬 스토리지 키
 const SEARCH_HISTORY_KEY = 'bible-search-history';
@@ -694,6 +697,42 @@ export const BibleSearch: React.FC = () => {
       </Box>
       
       <Paper sx={{ p: isMobile ? 2 : 3, mb: 3 }}>
+        {/* 인기 글 섹션 */}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
+            인기 글
+          </Typography>
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gap: 2
+          }}>
+            {blogPosts.slice(0, 3).map(post => (
+              <Box key={post.slug} sx={{
+                p: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+                bgcolor: 'background.paper'
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <ImageIcon fontSize="small" color="primary" />
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {post.category} · {post.date}
+                  </Typography>
+                </Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Link to={`/blog/${post.slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {post.title}
+                  </Link>
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {post.content.replace(/<[^>]+>/g, ' ').slice(0, 80)}...
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Box>
         <Box sx={{ 
           display: 'flex', 
           flexDirection: isMobile ? 'column' : 'row',

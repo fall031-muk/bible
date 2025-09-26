@@ -1,6 +1,7 @@
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { createWriteStream } = require('fs');
 const path = require('path');
+const { blogPosts } = require('../src/data/blogPosts');
 
 // 사이트의 기본 URL
 const baseUrl = 'https://bible-search.netlify.app';
@@ -8,9 +9,19 @@ const baseUrl = 'https://bible-search.netlify.app';
 // 사이트맵에 포함할 URL들
 const urls = [
   { url: '/', changefreq: 'daily', priority: 1.0 },
-  { url: '/search', changefreq: 'daily', priority: 0.9 },
-  { url: '/quiz', changefreq: 'daily', priority: 0.8 },
-  { url: '/about', changefreq: 'monthly', priority: 0.5 },
+  { url: '/quiz', changefreq: 'daily', priority: 0.9 },
+  { url: '/about', changefreq: 'monthly', priority: 0.7 },
+  { url: '/contact', changefreq: 'monthly', priority: 0.6 },
+  { url: '/privacy', changefreq: 'yearly', priority: 0.5 },
+  { url: '/terms', changefreq: 'yearly', priority: 0.5 },
+  { url: '/blog', changefreq: 'weekly', priority: 0.8 },
+  // 블로그 상세 URL을 데이터에서 자동 생성
+  ...blogPosts.map(post => ({
+    url: `/blog/${post.slug}`,
+    changefreq: 'weekly',
+    priority: 0.8,
+    lastmod: post.date,
+  })),
 ];
 
 // 사이트맵 스트림 생성

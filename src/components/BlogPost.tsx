@@ -62,6 +62,39 @@ const BlogPost: React.FC = () => {
   }
 
   const description = post.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 150);
+  const ogImage = post.ogImage ? `https://bible-search.netlify.app${post.ogImage}` : 'https://bible-search.netlify.app/logo512.png';
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '블로그',
+        item: 'https://bible-search.netlify.app/blog',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: post.title,
+        item: `https://bible-search.netlify.app/blog/${post.slug}`,
+      },
+    ],
+  } as const;
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    datePublished: post.date,
+    dateModified: post.date,
+    image: [ogImage],
+    mainEntityOfPage: `https://bible-search.netlify.app/blog/${post.slug}`,
+  } as const;
 
   return (
     <Container>
@@ -70,7 +103,12 @@ const BlogPost: React.FC = () => {
         <meta name="description" content={description} />
         <meta property="og:title" content={`${post.title} - Bible Muk`} />
         <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImage} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={ogImage} />
         <link rel="canonical" href={`https://bible-search.netlify.app/blog/${post.slug}`} />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(articleLd)}</script>
       </Helmet>
 
       <Title>{post.title}</Title>

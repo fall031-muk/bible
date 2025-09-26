@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { dailyVerses } from '../data/dailyVerses';
+import { blogPosts } from '../data/blogPosts';
+import { Link } from 'react-router-dom';
 
 const AboutContainer = styled.div`
   max-width: 800px;
@@ -146,6 +148,20 @@ const About: React.FC = () => {
         </VerseText>
         <VerseReference>{dailyVerse.reference} ({dailyVerse.translation})</VerseReference>
       </DailyVerse>
+
+      <Section>
+        <SubTitle>🔥 인기 글</SubTitle>
+        <FeatureList>
+          {blogPosts.slice(0, 4).map(post => (
+            <FeatureItem key={post.slug}>
+              <Link to={`/blog/${post.slug}`} style={{ color: '#1976d2', textDecoration: 'none' }}>
+                {post.title}
+              </Link>
+              <span style={{ color: '#888', marginLeft: 8, fontSize: '0.9rem' }}>({post.category} · {post.date})</span>
+            </FeatureItem>
+          ))}
+        </FeatureList>
+      </Section>
 
       <Section>
         <SubTitle>💡 서비스 제작 의도</SubTitle>

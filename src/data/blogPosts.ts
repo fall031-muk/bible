@@ -6,6 +6,7 @@ export interface BlogPostItem {
   date: string;
   author: string;
   content: string;
+  ogImage?: string;
 }
 
 export const blogPosts: BlogPostItem[] = [
@@ -16,6 +17,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '성경 학습',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/7-ways.jpg',
     content: `
         성경을 효과적으로 읽는 것은 단순히 글자를 읽는 것 이상의 의미가 있습니다. 
         하나님의 말씀을 깊이 이해하고 삶에 적용하기 위한 실용적인 방법들을 소개합니다.
@@ -57,6 +59,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '성경 읽기',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/ot-guide.jpg',
     content: `
          구약성경 39권을 체계적으로 읽기 위한 가이드를 제공합니다. 
          각 책의 특징과 핵심 메시지를 이해하면 더 의미 있는 성경 읽기가 가능합니다.
@@ -98,6 +101,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '성경 학습',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/nt-summary.jpg',
     content: `
         신약성경 27권의 핵심 내용을 정리하여 전체적인 흐름을 파악할 수 있도록 돕습니다. 
         예수 그리스도의 생애와 초대 교회의 역사를 중심으로 이해해보세요.
@@ -119,6 +123,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '영성 생활',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/memorization.jpg',
     content: `
          성경 암송은 단순히 구절을 외우는 것을 넘어 영적 성장과 삶의 변화를 가져옵니다. 
          과학적 연구에 따르면 암송은 뇌 기능 향상과 스트레스 감소에도 도움이 됩니다.
@@ -162,6 +167,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '성경 학습',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/quizzes.jpg',
     content: `
         성경 퀴즈는 재미있게 성경 지식을 늘릴 수 있는 효과적인 방법입니다. 
         Bible Muk의 퀴즈 기능을 활용하여 체계적으로 성경을 학습해보세요.
@@ -182,6 +188,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '영성 생활',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/prayer-meditation.jpg',
     content: `
         기도와 말씀 묵상은 영적 성장의 두 날개와 같습니다. 
         이 둘을 조화롭게 실천하면 더 깊은 하나님과의 관계를 경험할 수 있습니다.
@@ -203,6 +210,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '성경 인물',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/biblical-figures.jpg',
     content: `
         성경에 등장하는 인물들의 삶을 통해 우리가 배울 수 있는 신앙의 교훈들을 
         살펴보겠습니다. 그들의 성공과 실패를 통해 지혜를 얻을 수 있습니다.
@@ -224,6 +232,7 @@ export const blogPosts: BlogPostItem[] = [
     category: '성경 연구',
     date: '2025-07-08',
     author: 'Bible Muk',
+    ogImage: '/images/blog/prophecy.jpg',
     content: `
         성경에는 수많은 예언들이 기록되어 있으며, 그 중 많은 것들이 
         정확히 성취되었습니다. 이는 성경의 신빙성과 하나님의 주권을 보여줍니다.
