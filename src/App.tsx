@@ -9,6 +9,7 @@ import Privacy from './components/Privacy';
 import Contact from './components/Contact';
 import Terms from './components/Terms';
 import Blog from './components/Blog';
+import BlogPost from './components/BlogPost';
 import SearchIcon from '@mui/icons-material/Search';
 import QuizIcon from '@mui/icons-material/Quiz';
 import InfoIcon from '@mui/icons-material/Info';
@@ -429,6 +430,7 @@ function App() {
                       <Route path="/privacy" element={<Privacy />} />
                       <Route path="/terms" element={<Terms />} />
                       <Route path="/blog" element={<Blog />} />
+                      <Route path="/blog/:slug" element={<BlogPost />} />
                     </Routes>
                   </Box>
                 </Box>

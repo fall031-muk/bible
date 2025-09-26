@@ -81,18 +81,19 @@ const Privacy: React.FC = () => {
       </Section>
 
       <Section>
-        <SubTitle>6. 쿠키 및 웹 비콘 사용</SubTitle>
+        <SubTitle>6. 쿠키 및 동의(Consent) 관리</SubTitle>
         <Paragraph>
-          본 웹사이트는 사용자 경험 개선을 위해 쿠키를 사용합니다:
+          본 웹사이트는 사용자 경험 개선과 서비스 제공을 위해 쿠키를 사용합니다:
         </Paragraph>
         <Paragraph>
           - 필수 쿠키: 웹사이트 기본 기능 제공<br/>
           - 기능 쿠키: 사용자 설정 저장 (글자 크기, 다크 모드 등)<br/>
-          - 분석 쿠키: 웹사이트 이용 패턴 분석<br/>
-          - 광고 쿠키: 개인화된 광고 제공
+          - 분석 쿠키: 웹사이트 이용 패턴 분석 (예: Google Analytics)<br/>
+          - 광고 쿠키: 맞춤형 광고 제공 (예: Google AdSense)
         </Paragraph>
         <Paragraph>
-          사용자는 브라우저 설정을 통해 쿠키 사용을 제어할 수 있습니다.
+          사용자는 브라우저 설정 또는 사이트의 쿠키 설정을 통해 분석/광고 쿠키 수집에 대한 동의를 거부하거나 철회할 수 있습니다. 
+          유럽경제지역(EEA) 및 영국 이용자의 경우 관련 법령에 따라 동의가 수집되기 전까지 개인화 광고가 제공되지 않습니다.
         </Paragraph>
       </Section>
 
@@ -122,17 +123,17 @@ const Privacy: React.FC = () => {
       </Section>
 
       <Section>
-        <SubTitle>9. 개인정보 처리방침 변경</SubTitle>
+        <SubTitle>9. 이용자의 권리</SubTitle>
         <Paragraph>
-          본 개인정보 처리방침은 법령이나 서비스 변경사항에 따라 수정될 수 있습니다.
-          변경 시에는 웹사이트를 통해 공지하며, 중요한 변경사항의 경우 최소 30일 전에 사전 공지합니다.
+          이용자는 자신의 개인정보에 대한 열람, 정정, 삭제, 처리정지 요구 등의 권리를 행사할 수 있습니다. 해당 요청은 아래 연락처로 신청할 수 있습니다.
         </Paragraph>
       </Section>
 
       <Section>
-        <SubTitle>5. 개인정보 보호책임자</SubTitle>
+        <SubTitle>10. 개인정보 처리방침 변경</SubTitle>
         <Paragraph>
-          이메일: fall900802@gmail.com
+          본 개인정보 처리방침은 법령이나 서비스 변경사항에 따라 수정될 수 있습니다.
+          변경 시에는 웹사이트를 통해 공지하며, 중요한 변경사항의 경우 최소 30일 전에 사전 공지합니다.
         </Paragraph>
       </Section>
     </PrivacyContainer>
