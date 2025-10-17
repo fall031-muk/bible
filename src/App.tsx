@@ -19,6 +19,8 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import ArticleIcon from '@mui/icons-material/Article';
 import MenuIcon from '@mui/icons-material/Menu';
 import { BookmarkItem, BookmarksCollection } from './types/bible';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
+import { usePWAInstallPrompt } from './hooks/usePWAInstallPrompt';
 
 // 로컬 스토리지 키
 const BOOKMARKS_KEY = 'bible-bookmarks';
@@ -433,6 +435,8 @@ function App() {
                       <Route path="/blog/:slug" element={<BlogPost />} />
                     </Routes>
                   </Box>
+                  {/* PWA 설치 프롬프트 */}
+                  <PWAInstallController />
                 </Box>
               </ThemeProvider>
             </BookmarkContext.Provider>
@@ -444,3 +448,22 @@ function App() {
 }
 
 export default App; 
+
+function PWAInstallController() {
+  const { open, setOpen, isIOS, canInstall, promptInstall, closeAndDismiss } = usePWAInstallPrompt();
+
+  return (
+    <PWAInstallPrompt
+      open={open}
+      isIOS={isIOS}
+      canInstall={canInstall}
+      onClose={closeAndDismiss}
+      onInstall={async () => {
+        const result = await promptInstall();
+        if (result === 'accepted') {
+          setOpen(false);
+        }
+      }}
+    />
+  );
+}
