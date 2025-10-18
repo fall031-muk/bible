@@ -9,7 +9,6 @@ interface TextToSpeechButtonProps {
 
 const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({ text }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speechInstance, setSpeechInstance] = useState<SpeechSynthesisUtterance | null>(null);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   // 사용 가능한 음성 목록 로드
@@ -72,25 +71,21 @@ const TextToSpeechButton: React.FC<TextToSpeechButtonProps> = ({ text }) => {
     // 이벤트 리스너 등록
     utterance.onend = () => {
       setIsPlaying(false);
-      setSpeechInstance(null);
     };
     
     utterance.onerror = () => {
       setIsPlaying(false);
-      setSpeechInstance(null);
     };
     
     // 음성 재생 시작
     window.speechSynthesis.speak(utterance);
     setIsPlaying(true);
-    setSpeechInstance(utterance);
   };
 
   const stopSpeech = () => {
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
       setIsPlaying(false);
-      setSpeechInstance(null);
     }
   };
 

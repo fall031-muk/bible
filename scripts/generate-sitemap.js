@@ -1,7 +1,25 @@
 const { SitemapStream, streamToPromise } = require('sitemap');
-const { createWriteStream } = require('fs');
+const { createWriteStream, readFileSync } = require('fs');
 const path = require('path');
-const { blogPosts } = require('../src/data/blogPosts');
+
+// Try to load blog posts from TS source by simple regex parsing (no TS runtime in Node)
+function loadBlogPosts() {
+  const blogPostsPath = path.join(__dirname, '../src/data/blogPosts.ts');
+  try {
+    const source = readFileSync(blogPostsPath, 'utf8');
+    const regex = /slug:\s*'([^']+)'[\s\S]*?date:\s*'([^']+)'/g;
+    const posts = [];
+    let match;
+    while ((match = regex.exec(source)) !== null) {
+      posts.push({ slug: match[1], date: match[2] });
+    }
+    return posts;
+  } catch (e) {
+    console.warn('Warning: Unable to read blog posts from TS. Skipping detailed blog URLs.');
+    return [];
+  }
+}
+const blogPosts = loadBlogPosts();
 
 // 사이트의 기본 URL
 const baseUrl = 'https://bible-search.netlify.app';

@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Modal, Box, IconButton, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { blogPosts } from '../data/blogPosts';
@@ -87,73 +85,6 @@ const ReadMore = styled(Link)`
   font-size: 1rem;
 `;
 
-const ModalContent = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  padding: 2rem;
-  overflow-y: auto;
-  
-  @media (max-width: 768px) {
-    width: 95%;
-    padding: 1.5rem;
-  }
-`;
-
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #f0f0f0;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 1.8rem;
-  color: #1976d2;
-  margin: 0;
-  flex: 1;
-  margin-right: 1rem;
-`;
-
-const ModalBody = styled.div`
-  line-height: 1.8;
-  color: #555;
-  font-size: 1.1rem;
-  
-  p {
-    margin-bottom: 1.5rem;
-  }
-  
-  strong {
-    color: #333;
-    font-weight: 600;
-  }
-  
-  h3 {
-    color: #1976d2;
-    margin: 2rem 0 1rem 0;
-    font-size: 1.4rem;
-  }
-  
-  ul {
-    margin: 1rem 0;
-    padding-left: 2rem;
-  }
-  
-  li {
-    margin-bottom: 0.8rem;
-  }
-`;
-
 const IntroSection = styled.section`
   background-color: #f5f5f5;
   padding: 2rem;
@@ -170,9 +101,6 @@ const IntroText = styled.p`
 `;
 
 const Blog: React.FC = () => {
-  const [selectedPost, setSelectedPost] = useState<any>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
   return (
     <BlogContainer>
       <Helmet>
@@ -199,7 +127,7 @@ const Blog: React.FC = () => {
       </IntroSection>
 
       <BlogGrid>
-        {blogPosts.map((post, index) => (
+        {blogPosts.map((post) => (
           <React.Fragment key={post.id}>
             <BlogCard>
               <BlogMeta>
@@ -220,8 +148,6 @@ const Blog: React.FC = () => {
           </React.Fragment>
         ))}
       </BlogGrid>
-
-      {/* 상세 페이지로 이동 구조로 변경되어 모달은 제거 */}
     </BlogContainer>
   );
 };
