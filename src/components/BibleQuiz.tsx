@@ -15,24 +15,13 @@ import {
   Divider,
   Stack,
   Chip,
-  IconButton,
   Grid,
   ToggleButton,
   ToggleButtonGroup,
   Alert,
   LinearProgress,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   useTheme,
-  useMediaQuery,
-  Tab,
-  Tabs,
-  Menu,
-  MenuItem,
-  Tooltip
+  useMediaQuery
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
@@ -672,14 +661,14 @@ export const BibleQuiz: React.FC = () => {
               </Button>
               
               {!showExplanation ? (
-                <Button
+              <Button
                   variant="contained"
                   color="primary"
                   onClick={handleAnswerSubmit}
-                  disabled={
-                    (currentQuiz.type === 'multiple-choice' || currentQuiz.type === 'true-false') && currentAnswer?.userAnswer === null ||
-                    (currentQuiz.type === 'fill-blank' && textAnswer.trim() === '')
-                  }
+                disabled={(
+                  ((currentQuiz.type === 'multiple-choice' || currentQuiz.type === 'true-false') && currentAnswer?.userAnswer === null) ||
+                  (currentQuiz.type === 'fill-blank' && textAnswer.trim() === '')
+                )}
                 >
                   정답 확인
                 </Button>

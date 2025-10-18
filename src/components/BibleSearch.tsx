@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import {
   Box,
   TextField,
@@ -17,24 +17,18 @@ import {
   Stack,
   useMediaQuery,
   useTheme,
-  Drawer,
   Fab,
-  Divider,
   Chip,
   Popover,
   ListItemButton,
   ListItemIcon,
-  ClickAwayListener,
   Menu,
   Badge,
   Snackbar,
   Alert,
-  Avatar,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
+// font size control icons removed
+// import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import SearchIcon from '@mui/icons-material/Search';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -47,7 +41,7 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import bibleData from '../data/bible.json';
 import { BibleData, BibleVerse, SearchParams, BookmarkItem } from '../types/bible';
-import { FontSizeContext, ColorModeContext, BookmarkContext } from '../App';
+import { ColorModeContext, BookmarkContext } from '../App';
 import TextToSpeechButton from './TextToSpeechButton';
 import { blogPosts } from '../data/blogPosts';
 import { Link } from 'react-router-dom';
@@ -80,7 +74,7 @@ export const BibleSearch: React.FC = () => {
   const [chapters, setChapters] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [results, setResults] = useState<BibleVerse[]>([]);
-  const [showFontControls, setShowFontControls] = useState(false);
+  // const [showFontControls, setShowFontControls] = useState(false);
   const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([]);
   const [historyAnchorEl, setHistoryAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [highlightMenuAnchorEl, setHighlightMenuAnchorEl] = useState<HTMLElement | null>(null);
@@ -90,7 +84,7 @@ export const BibleSearch: React.FC = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   
-  const { fontSize, increaseFontSize, decreaseFontSize, resetFontSize } = useContext(FontSizeContext);
+  // font size controls are handled globally in Navigation
   const { mode, toggleColorMode } = useContext(ColorModeContext);
   const { bookmarks, addBookmark, removeBookmark, toggleHighlight, isBookmarked, getBookmarkByReference } = useContext(BookmarkContext);
   
@@ -112,14 +106,14 @@ export const BibleSearch: React.FC = () => {
   }, []);
 
   // 검색 기록 저장
-  const saveSearchHistory = (history: SearchHistory[]) => {
+  const saveSearchHistory = useCallback((history: SearchHistory[]) => {
     try {
       localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(history));
       setSearchHistory(history);
     } catch (error) {
       console.error('검색 기록을 저장하는 중 오류가 발생했습니다:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     // 성경 책 이름 목록을 추출합니다
@@ -192,12 +186,15 @@ export const BibleSearch: React.FC = () => {
   }, []);
 
   // 검색 기록에 추가
-  const addToSearchHistory = (params: SearchParams) => {
+  const addToSearchHistory = useCallback((params: SearchParams) => {
     // 빈 검색은 기록하지 않음
     if (!params.keyword && !params.book && !params.chapter) return;
     
-    // 검색 기록 아이템 생성
-    const displayText = getDisplayText(params);
+    // 검색 기록 아이템 생성 (직접 생성하여 의존성 최소화)
+    const parts: string[] = [];
+    if (params.keyword) parts.push(`"${params.keyword}"`);
+    if (params.book) parts.push(params.chapter ? `${params.book} ${params.chapter}장` : params.book);
+    const displayText = parts.length > 0 ? parts.join(' - ') : '전체 검색';
     
     // 동일한 검색 내용이 있는지 확인
     const existingIndex = searchHistory.findIndex(
@@ -233,7 +230,7 @@ export const BibleSearch: React.FC = () => {
     }
     
     saveSearchHistory(updatedHistory);
-  };
+  }, [saveSearchHistory, searchHistory]);
   
   // 검색 기록에서 항목 제거
   const removeFromSearchHistory = (id: string) => {
@@ -246,26 +243,9 @@ export const BibleSearch: React.FC = () => {
     saveSearchHistory([]);
   };
   
-  // 검색 표시 텍스트 생성
-  const getDisplayText = (params: SearchParams): string => {
-    const parts = [];
-    
-    if (params.keyword) {
-      parts.push(`"${params.keyword}"`);
-    }
-    
-    if (params.book) {
-      if (params.chapter) {
-        parts.push(`${params.book} ${params.chapter}장`);
-      } else {
-        parts.push(params.book);
-      }
-    }
-    
-    return parts.length > 0 ? parts.join(' - ') : '전체 검색';
-  };
+  // getDisplayText는 addToSearchHistory 내부에서 직접 처리합니다
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const { keyword, book, chapter } = searchParams;
     const searchResults: BibleVerse[] = [];
     
@@ -404,7 +384,7 @@ export const BibleSearch: React.FC = () => {
     if (hasKeyword || hasBook || hasChapter) {
       addToSearchHistory({ ...searchParams });
     }
-  };
+  }, [searchParams, addToSearchHistory]);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -412,9 +392,7 @@ export const BibleSearch: React.FC = () => {
     }
   };
 
-  const toggleFontControls = () => {
-    setShowFontControls(!showFontControls);
-  };
+  // 폰트 컨트롤 토글은 사용하지 않아 제거
   
   // 검색 기록 팝오버 열기
   const handleHistoryClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -448,7 +426,7 @@ export const BibleSearch: React.FC = () => {
       
       return () => clearTimeout(timer);
     }
-  }, [searchParams]);
+  }, [searchParams, handleSearch]);
 
   const historyOpen = Boolean(historyAnchorEl);
 
@@ -657,7 +635,7 @@ export const BibleSearch: React.FC = () => {
             </IconButton>
           </Tooltip>
           
-          {showFontControls && (
+          {false && (
             <Stack 
               direction="row" 
               spacing={1} 
@@ -669,39 +647,7 @@ export const BibleSearch: React.FC = () => {
                 borderRadius: 1,
               }}
             >
-              <Tooltip title="글자 크기 축소">
-                <IconButton 
-                  onClick={decreaseFontSize} 
-                  size="small"
-                  disabled={fontSize <= 12}
-                >
-                  <RemoveIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              
-              <Typography sx={{ display: 'flex', alignItems: 'center' }}>
-                {fontSize}px
-              </Typography>
-              
-              <Tooltip title="글자 크기 확대">
-                <IconButton 
-                  onClick={increaseFontSize} 
-                  size="small"
-                  disabled={fontSize >= 24}
-                >
-                  <AddIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              
-              <Tooltip title="글자 크기 초기화">
-                <IconButton 
-                  onClick={resetFontSize} 
-                  size="small"
-                  disabled={fontSize === 16}
-                >
-                  <RestartAltIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
+              <Typography sx={{ display: 'flex', alignItems: 'center' }} />
             </Stack>
           )}
         </Box>
@@ -854,7 +800,7 @@ export const BibleSearch: React.FC = () => {
             results.map((verse, index) => {
               const isBookmarked = checkBookmarkStatus(verse);
               const highlightColor = getVerseHighlightColor(verse);
-              const verseReference = `${verse.book}${verse.chapter}:${verse.verse}`;
+              // const verseReference = `${verse.book}${verse.chapter}:${verse.verse}`;
               
               return (
                 <ListItem 
