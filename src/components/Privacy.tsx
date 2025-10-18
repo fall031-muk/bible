@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import styled from 'styled-components';
 
 const PrivacyContainer = styled.div`
@@ -32,6 +33,15 @@ const Paragraph = styled.p`
 const Privacy: React.FC = () => {
   return (
     <PrivacyContainer>
+      <Helmet>
+        <title>개인정보 처리방침 - Bible Muk</title>
+        <meta name="description" content="Bible Muk 개인정보 처리방침: 수집 항목, 이용 목적, 보유 기간, 제3자 제공, 위탁, 쿠키, 보호조치 등" />
+        <meta property="og:title" content="개인정보 처리방침 - Bible Muk" />
+        <meta property="og:description" content="Bible Muk 개인정보 처리방침 안내" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bible-search.netlify.app/privacy" />
+        <link rel="canonical" href="https://bible-search.netlify.app/privacy" />
+      </Helmet>
       <Title>개인정보 처리방침</Title>
       
       <Section>

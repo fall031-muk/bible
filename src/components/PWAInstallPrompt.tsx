@@ -17,10 +17,15 @@ export function PWAInstallPrompt({ open, isIOS, canInstall, onClose, onInstall }
         {isIOS ? (
           <Box>
             <Typography variant="body2" gutterBottom>
-              iOS에서는 사파리 하단의 공유 버튼을 눌러 "홈 화면에 추가"를 선택하면 앱처럼 사용할 수 있습니다.
+              iOS(Safari)에서는 시스템 설치 팝업이 없어 아래 절차로 홈 화면에 추가해야 합니다:
             </Typography>
+            <Box component="ol" sx={{ pl: 2, mb: 0.5 }}>
+              <Typography component="li" variant="body2">하단의 공유 버튼(위로 화살표) 터치</Typography>
+              <Typography component="li" variant="body2">아래로 스크롤하여 "홈 화면에 추가" 선택</Typography>
+              <Typography component="li" variant="body2">이름 확인 후 "추가"</Typography>
+            </Box>
             <Typography variant="caption" color="text.secondary">
-              공유 아이콘: 위로 화살표가 있는 사각형 모양
+              참고: iOS에서는 앱이 아닌 브라우저에서 위 과정을 수행합니다.
             </Typography>
           </Box>
         ) : (
@@ -30,7 +35,7 @@ export function PWAInstallPrompt({ open, isIOS, canInstall, onClose, onInstall }
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>나중에</Button>
+        <Button onClick={onClose}>닫기</Button>
         {!isIOS && canInstall && (
           <Button onClick={onInstall} variant="contained" autoFocus>
             설치

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { 
   Box, 
   Typography, 
@@ -45,6 +46,17 @@ import { FontSizeContext } from '../App';
 import { ScriptureModal } from './ScriptureModal';
 
 export const BibleQuiz: React.FC = () => {
+  const seo = (
+    <Helmet>
+      <title>성경 퀴즈 - Bible Muk | 난이도별 성경 지식 테스트</title>
+      <meta name="description" content="난이도별 성경 퀴즈로 성경 지식을 재미있게 테스트하세요. 객관식, 참/거짓, 빈칸 채우기 문제 제공." />
+      <meta property="og:title" content="성경 퀴즈 - Bible Muk" />
+      <meta property="og:description" content="난이도별 성경 퀴즈로 성경 지식을 재미있게 테스트하세요." />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://bible-search.netlify.app/quiz" />
+      <link rel="canonical" href="https://bible-search.netlify.app/quiz" />
+    </Helmet>
+  );
   const { fontSize } = useContext(FontSizeContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -312,6 +324,7 @@ export const BibleQuiz: React.FC = () => {
   if (!quizStarted) {
     return (
       <Box sx={{ p: 2, maxWidth: '100%' }}>
+        {seo}
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
           <Typography variant="h4" gutterBottom sx={{ fontSize: fontSize + 8, textAlign: 'center', mb: 3 }}>
             성경 퀴즈
@@ -367,6 +380,7 @@ export const BibleQuiz: React.FC = () => {
   if (showResults) {
     return (
       <Box sx={{ p: 2, maxWidth: '100%' }}>
+        {seo}
         <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h4" gutterBottom sx={{ fontSize: fontSize + 8, mb: 0 }}>
@@ -462,6 +476,7 @@ export const BibleQuiz: React.FC = () => {
 
   return (
     <Box sx={{ p: isMobile ? 1 : 2, maxWidth: '100%' }}>
+      {seo}
       <Paper elevation={3} sx={{ p: isMobile ? 2 : 3, borderRadius: 2 }}>
         {/* 상단 정보 표시 */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>

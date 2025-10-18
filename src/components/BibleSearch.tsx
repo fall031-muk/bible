@@ -52,6 +52,7 @@ import TextToSpeechButton from './TextToSpeechButton';
 import { blogPosts } from '../data/blogPosts';
 import { Link } from 'react-router-dom';
 import ImageIcon from '@mui/icons-material/Image';
+import { Helmet } from 'react-helmet-async';
 
 // 로컬 스토리지 키
 const SEARCH_HISTORY_KEY = 'bible-search-history';
@@ -587,6 +588,16 @@ export const BibleSearch: React.FC = () => {
       p: isMobile ? 2 : 3,
       boxSizing: 'border-box',
     }}>
+      <Helmet>
+        <title>성경 검색 - Bible Muk | 빠르고 정확한 성경 구절 검색</title>
+        <meta name="description" content="개역개정 성경 66권 전체에서 빠르고 정확하게 구절을 검색하세요. 북마크와 하이라이트, 음성 읽기, 다크 모드까지 지원합니다." />
+        <meta name="keywords" content="성경 검색, 성경 구절, 개역개정, 한글성경, 성경공부, 말씀 검색" />
+        <meta property="og:title" content="성경 검색 - Bible Muk" />
+        <meta property="og:description" content="개역개정 성경 전체에서 빠르고 정확하게 구절을 검색하세요." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bible-search.netlify.app/" />
+        <link rel="canonical" href="https://bible-search.netlify.app/" />
+      </Helmet>
       <Box sx={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',

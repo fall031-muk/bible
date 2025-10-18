@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet-async';
 
 const ContactContainer = styled.div`
   max-width: 800px;
@@ -48,6 +49,15 @@ const Label = styled.span`
 const Contact: React.FC = () => {
   return (
     <ContactContainer>
+      <Helmet>
+        <title>문의하기 - Bible Muk</title>
+        <meta name="description" content="Bible Muk 서비스에 대한 피드백 및 문의를 환영합니다. 오류 신고, 기능 제안, 협력 문의 등은 이메일로 연락해 주세요." />
+        <link rel="canonical" href="https://bible-search.netlify.app/contact" />
+        <meta property="og:title" content="문의하기 - Bible Muk" />
+        <meta property="og:description" content="Bible Muk 서비스에 대한 피드백 및 문의를 환영합니다." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bible-search.netlify.app/contact" />
+      </Helmet>
       <Title>문의하기</Title>
       
       <Section>
